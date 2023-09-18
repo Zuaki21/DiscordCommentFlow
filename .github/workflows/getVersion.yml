@@ -1,0 +1,27 @@
+name: Get Editor Version
+
+on:
+    workflow_dispatch: {}
+
+jobs:
+    get_version:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v2
+
+            - name: Setup Python
+              uses: actions/setup-python@v2
+              with:
+                  python-version: "3.x"
+
+            - name: Get version number
+              id: get_version
+              run: |
+                  echo "Extracting version number"
+                  version=$(python .github/workflows/get_version.py ProjectSettings/ProjectVersion.txt)
+                  echo "::set-output name=version::$version"
+
+            - name: Display version number
+              run: echo "Editor version is ${{ steps.get_version.outputs.version }}"
+              shell: bash

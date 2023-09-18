@@ -1,0 +1,14 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using Zuaki;
+
+namespace Zuaki
+{
+    [CreateAssetMenu(fileName = "#SCRIPTNAME#", menuName = "Zuaki/#SCRIPTNAME#", order = 100)]
+	public class #SCRIPTNAME# : SingletonScriptableObject<#SCRIPTNAME#>
+	{
+    public static int Sample => Instance.sample;
+    private int sample;
+	}
+}

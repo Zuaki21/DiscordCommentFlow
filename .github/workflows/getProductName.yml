@@ -1,0 +1,27 @@
+name: Get Product Name
+
+on:
+    workflow_dispatch: {}
+
+jobs:
+    get_product_name:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v2
+
+            - name: Setup Python
+              uses: actions/setup-python@v2
+              with:
+                  python-version: "3.x"
+
+            - name: Get product name string
+              id: get_product_name_string
+              run: |
+                  echo "Extracting version number"
+                  name=$(python .github/workflows/get_product_name.py ProjectSettings/ProjectSettings.asset)
+                  echo "::set-output name=product_name::$name"
+
+            - name: Display product name
+              run: echo "Product Name is ${{ steps.get_product_name_string.outputs.product_name }}"
+              shell: bash

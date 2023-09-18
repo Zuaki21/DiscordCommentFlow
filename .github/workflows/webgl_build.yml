@@ -1,0 +1,120 @@
+#https://zenn.dev/nikaera/articles/unity-gameci-github-actions
+name: Run the WebGL build
+on:
+    push:
+        branches:
+            - main
+    workflow_dispatch: {}
+jobs:
+    get_version:
+        name: get Unity version
+        runs-on: ubuntu-latest
+        outputs:
+            version: ${{ steps.get_version_number.outputs.version }}
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v2
+
+            - name: Setup Python
+              uses: actions/setup-python@v2
+              with:
+                  python-version: "3.x"
+
+            - name: Get version number
+              id: get_version_number
+              run: |
+                  echo "Extracting version number"
+                  version=$(python .github/workflows/get_version.py ProjectSettings/ProjectVersion.txt)
+                  echo "::set-output name=version::$version"
+    build:
+        name: Run the WebGL build
+        runs-on: ubuntu-latest
+        needs: get_version
+        steps:
+            # actions/checkout@v2 を利用して作業ディレクトリに
+            # Unity プロジェクトの中身をダウンロードしてくる
+            - name: Check out my unity project.
+              uses: actions/checkout@v2
+
+            # GameCI の Builder を利用して、
+            # Unity プロジェクトのビルドを実行する
+            - name: Run the WebGL build
+              uses: game-ci/unity-builder@v2
+              env:
+                  UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+              with:
+                  # 今回は WebGL ビルドを行いたいため WebGL を指定する
+                  # WebGL 以外の指定可能な値は下記に記載の値が利用可能
+                  # ref: https://docs.unity3d.com/ScriptReference/BuildTarget.html
+                  targetPlatform: WebGL
+
+                  # unityVersion: 2021.3.19f1
+                  unityVersion: ${{needs.get_version.outputs.version}}
+
+            # 権限を解放
+            - name: Change permissions for build/WebGL
+              run: sudo chmod -R 777 build/WebGL
+
+            # pythonプログラムを実行
+            - name: Set up Python
+              uses: actions/setup-python@v2
+              with:
+                  python-version: 3.9
+
+            # 必要なライブラリ(pytz)をインストール
+            - name: Install dependencies
+              run: pip install pytz
+
+            # UnityのProductNameを取得
+            - name: Get product name string
+              id: get_product_name_string
+              run: |
+                  echo "Extracting version number"
+                  name=$(python .github/workflows/get_product_name.py ProjectSettings/ProjectSettings.asset)
+                  echo "::set-output name=product_name::$name"
+
+            #プロジェクト情報の入ったJsonファイルを作成
+            - name: Generate Json File
+              run: python .github/workflows/GenerateJson.py
+              env:
+                  PRODUCT_NAME: ${{ steps.get_product_name_string.outputs.product_name }}
+                  GITHUB_REPOSITORY: ${{ github.repository }}
+                  UNITY_VERSION: ${{needs.get_version.outputs.version}}
+
+            # フッター追加
+            - name: Add footer to HTML
+              run: |
+                  python .github/workflows/AddFooter.py
+
+            #リポジトリ名を取得
+            - name: Get Repository Name
+              id: repository
+              run: echo "name=${GITHUB_REPOSITORY#${GITHUB_REPOSITORY_OWNER}/}" >> $GITHUB_OUTPUT
+
+            # gh-pagesブランチにデプロイ(配置)する
+            # 元のファイルは上書きされない限り影響はない
+            - name: Deploy to GitHub Pages
+              uses: JamesIves/github-pages-deploy-action@4.1.3
+              with:
+                  # GitHub Pages デプロイ用のgh-pagesブランチ名を指定する
+                  branch: gh-pages
+
+                  # 取り出すフォルダ(ファイル)の作業ディレクトリパス
+                  folder: build/WebGL/WebGL
+
+                  # トークン(別のリポジトリへのデプロイ用)
+                  token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+
+                  # 別の公開用リポジトリを指定
+                  repository-name: Zuaki21/develop
+
+                  # 取り出したフォルダの配置先のフォルダパス
+                  # steps.repository.outputs.nameでリポジトリ名から取っている
+                  target-folder: ${{ steps.repository.outputs.name }}
+
+            # Builder で出力した WebGL ビルドをアーティファクトでダウンロード可能にする
+            - name: Upload the WebGL Build
+              uses: actions/upload-artifact@v2
+              with:
+                  name: Build
+                  path: build

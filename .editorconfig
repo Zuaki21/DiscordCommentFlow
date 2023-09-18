@@ -1,0 +1,20 @@
+root = true #原則trueにしておく
+#プロジェクトルートに置くことでプロジェクト全体に反映させことができる
+
+[*] #全てのファイルにて適用される設定
+charset = utf-8         #文字コード(latin1/utf-8/utf-8-bom/utf-16be/utf-16le)
+end_of_line = crlf      #改行コード(crlf/cr/lf)
+insert_final_newline = true  #ファイルの最後に改行を入れるかどうか
+trim_trailing_whitespace = true #行末の空白を削除するかどうか
+
+[*] #.NETのウザイ警告を無効化する
+dotnet_diagnostic.IDE0051.severity = none # ローカル変数を使用している場合、'this.' を使用する必要はありません。
+dotnet_diagnostic.IDE0044.severity = none # 読み取り専用のフィールドを使用している場合、'readonly' を使用する必要はありません。
+dotnet_diagnostic.RCS1213.severity = none # ??w
+dotnet_diagnostic.RCS1169.severity = none #'is' 演算子を使用する必要があります。
+dotnet_diagnostic.IDE0090.severity = none #'new()' を使用している場合、'using' ステートメントを使用する必要はありません。
+
+[*.cs]  #拡張子が.csのファイルに適用される設定
+indent_style = space    #インデントスタイル(space/tab)
+indent_size = 4         #インデント幅
+tab_width = 4           #タブ幅

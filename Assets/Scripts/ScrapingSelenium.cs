@@ -9,12 +9,12 @@ using System.Threading.Tasks;
 using OpenQA.Selenium;
 using System.Collections.ObjectModel;
 using System.Linq;
+using Unity.VisualScripting;
 
 namespace Zuaki
 {
     public class ScrapingSelenium : SingletonMonoBehaviour<ScrapingSelenium>
     {
-        public string url = "https://www.google.com/";
         private ChromeDriver driver;
         public bool isHeadless = true;
         [SerializeField] GameObject LoadingCommentObj;
@@ -48,15 +48,15 @@ namespace Zuaki
                 driver = new ChromeDriver(driverService, options);
 
                 // 起動後は好きなようにChromeを操作できる
-                driver.Navigate().GoToUrl(url);
+                driver.Navigate().GoToUrl(Settings.Instance.url);
                 // 画面キャプチャを撮る
                 _ = CheckNewComment();
             });
         }
         public void ChangeURL(string newUrl)
         {
-            url = newUrl;
-            driver.Navigate().GoToUrl(url);
+            Settings.Instance.url = newUrl;
+            driver.Navigate().GoToUrl(Settings.Instance.url);
         }
 
         List<ChatElement> chatElementHistory = new List<ChatElement>();
@@ -71,9 +71,26 @@ namespace Zuaki
                 if (newChatElements.Count > 0)
                 {
                     if (LoadingCommentObj.activeSelf) LoadingCommentObj.SetActive(false);
-                    ChatManager.Instance.AddChatElement(newChatElements.ToArray());
+                    // 新しいコメントがあったら追加
+                    string[] comments = newChatElements.Select(e => e.Message).ToArray();
+                    AddComment(comments);
                 }
                 await UniTask.Delay(1000);// 1秒待つ
+            }
+        }
+        async void AddComment(string[] comments)
+        {
+            if (comments.Length == 0) return;
+            // 新しいコメントがあったら追加
+            ChatManager.Instance.AddChatElement(comments);
+
+            // GPTを使う設定の場合はコメントを生成して追加
+            if (Settings.Instance.useGPT)
+            {
+                string[] generatedComments = await CommentGenerator.GetComments(comments);
+                //ChatManager.Instance.AddChatElement(generatedComments);
+                ChatManager.Instance.AddChatElement(generatedComments);
+
             }
         }
 
@@ -115,6 +132,11 @@ namespace Zuaki
                 newChatElements.Add(chatElement);
                 // 重複していなかったらchatElementsに追加
                 chatElementHistory.Add(chatElement);
+                // chatElementsの数が20を超えたら古いものから削除
+                if (chatElementHistory.Count > 20)
+                {
+                    chatElementHistory.RemoveAt(0);
+                }
             }
 
             await UniTask.SwitchToMainThread(); // メインスレッドに戻る

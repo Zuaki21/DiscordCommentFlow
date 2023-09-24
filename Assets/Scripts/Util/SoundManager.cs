@@ -33,6 +33,7 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
     public static void UnPauseBGM() => Instance._UnPauseBGM();
     public static void StopBGM() => Instance._StopBGM();
     public static void RePlayBGM() => Instance._RePlayBGM();
+    public static bool IsPlayingBGM => Instance.audioSourceBGM.isPlaying;
 
     /// <summary>
     /// 指定のAudioClipを指定の秒数によってフェードイン、フェードアウトさせて再生する

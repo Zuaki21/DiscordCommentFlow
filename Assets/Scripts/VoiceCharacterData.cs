@@ -12,35 +12,53 @@ namespace Zuaki
     {
         public static VoiceCharacter[] VoiceCharacters => Instance.voiceCharacters;
         [SerializeField] VoiceCharacter[] voiceCharacters;
-        [SerializeField, TextArea(30, 30)] string json;
+        [SerializeField] Object jsonObject;
 
+#if UNITY_EDITOR
         [ContextMenu("Load"), Button("Load")]
         void LoadData()
         {
-            VoiceCharacterArray voiceCharacterArray = new VoiceCharacterArray(voiceCharacters);
+            //jsonObjectのパスを取得
+            string path = UnityEditor.AssetDatabase.GetAssetPath(jsonObject);
+            //jsonファイルをテキストとして読み込む
+            string json = System.IO.File.ReadAllText(path);
+            //jsonを配列に変換
+            VoiceCharacterArray voiceCharacterArray = new VoiceCharacterArray();
             JsonUtility.FromJsonOverwrite(json, voiceCharacterArray);
+            voiceCharacters = voiceCharacterArray.voiceCharacters;
+
+            //データの保存
+            UnityEditor.EditorUtility.SetDirty(this);
+            UnityEditor.AssetDatabase.SaveAssets();
         }
+
+        [ContextMenu("Delete"), Button("Delete")]
+        void DeleteData()
+        {
+            voiceCharacters = null;
+            //データの保存
+            UnityEditor.EditorUtility.SetDirty(this);
+            UnityEditor.AssetDatabase.SaveAssets();
+
+        }
+#endif
     }
 
     [System.Serializable]
     public class VoiceCharacterArray
     {
-        [SerializeField] VoiceCharacter[] voiceCharacters;
-        public VoiceCharacterArray(VoiceCharacter[] voiceCharacters)
-        {
-            this.voiceCharacters = voiceCharacters;
-        }
+        public VoiceCharacter[] voiceCharacters;
     }
     [System.Serializable]
     public class VoiceCharacter
     {
-        [SerializeField] string name;
-        [SerializeField] Tone[] styles;
+        public string name;
+        public Style[] styles;
     }
     [System.Serializable]
-    public class Tone
+    public class Style
     {
-        [SerializeField] string name;
-        [SerializeField] int id;
+        public string name;
+        public int id;
     }
 }

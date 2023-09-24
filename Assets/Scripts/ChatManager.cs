@@ -3,6 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using Zuaki;
 using TMPro;
+using System.Linq;
+using Cysharp.Threading.Tasks;
+using Unity.VisualScripting;
+using UnityEngine.UI;
+
 
 namespace Zuaki
 {
@@ -11,29 +16,35 @@ namespace Zuaki
         List<FlowComment> allFlowComments = new List<FlowComment>();
         [SerializeField] Transform commentParent;
         [SerializeField] GameObject flowCommentPrefab;
+        [SerializeField] ChatMaterial chatMaterial;
 
         float topLocalY = 335;
         float rightLocalX = 650;
         float leftLocalY = -650;
 
-        protected void Start()
+        public static void AddChatElement(ChatElement[] chatElements)
         {
-        }
-        protected void Update()
-        {
-            if (Input.GetKeyDown(KeyCode.Space))
+            Instance.CreateFlowChat(chatElements);
+
+            // VoiceVoxを使う設定の場合は音声生成リストに追加
+            if (Settings.Instance.useVoiceVox)
             {
-                Debug.Log(allFlowComments.Count);
+                VoiceSpeaker.AddComment(chatElements);
             }
         }
 
-        public void AddChatElement(string[] newComments)
+        async void CreateFlowChat(ChatElement[] chatElements)
         {
-            foreach (string newComment in newComments)
+            string[] newComments = chatElements.Select(e => e.Message).ToArray();
+            foreach (ChatElement newElement in chatElements)
             {
+                //新しいコメントを生成
                 GameObject newFlowChatObject = Instantiate(flowCommentPrefab);
+                TextMeshProUGUI textMeshProUGUI = newFlowChatObject.GetComponent<TextMeshProUGUI>();
                 //コメントを設定
-                newFlowChatObject.GetComponent<TextMeshProUGUI>().text = newComment;
+                textMeshProUGUI.text = newElement.Message;
+                //Materialを設定
+                textMeshProUGUI.fontMaterial = chatMaterial.GetMaterial(newElement.Commenter);
                 //親を設定
                 newFlowChatObject.transform.SetParent(commentParent);
 
@@ -43,6 +54,8 @@ namespace Zuaki
                 //コメントの位置が重ならないように必要に応じて変更
                 newFlowChatObject.transform.localPosition = GetFlowChatPosition(flowComment);
                 allFlowComments.Add(flowComment);
+
+                await UniTask.Delay(millisecondsDelay: Random.Range(0, 2000));
             }
         }
 
@@ -92,6 +105,29 @@ namespace Zuaki
             //  コメントが消える前に衝突するならtrueを返す
             if (earlyEndTime <= relativeConflictTime) return true;
             else return false;
+        }
+    }
+    [System.Serializable]
+    public class ChatMaterial
+    {
+        public Material Programmer;
+        public Material Illustrator;
+        public Material SoundCreator;
+        public Material ScenarioWriter;
+        public Material GPT;
+        public Material Other;
+
+        public Material GetMaterial(Commenter commenter)
+        {
+            return commenter switch
+            {
+                Commenter.Programmer => Programmer,
+                Commenter.Illustrator => Illustrator,
+                Commenter.SoundCreator => SoundCreator,
+                Commenter.ScenarioWriter => ScenarioWriter,
+                Commenter.GPT => GPT,
+                _ => Other,
+            };
         }
     }
 }

@@ -14,118 +14,189 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   voiceCharacters:
   - name: "\u56DB\u56FD\u3081\u305F\u3093"
-    styles: []
-  - name: 
-    styles: []
-  - name: 
-    styles: []
-  json: "[\r\n  {\r\n    \"name\": \"\u56DB\u56FD\u3081\u305F\u3093\",\r\n    \"styles\":
-    [\r\n      {\r\n        \"name\": \"\u30CE\u30FC\u30DE\u30EB\",\r\n        \"id\":
-    2\r\n      },\r\n      {\r\n        \"name\": \"\u3042\u307E\u3042\u307E\",\r\n       
-    \"id\": 0\r\n      },\r\n      {\r\n        \"name\": \"\u30C4\u30F3\u30C4\u30F3\",\r\n       
-    \"id\": 6\r\n      },\r\n      {\r\n        \"name\": \"\u30BB\u30AF\u30B7\u30FC\",\r\n       
-    \"id\": 4\r\n      },\r\n      {\r\n        \"name\": \"\u3055\u3055\u3084\u304D\",\r\n       
-    \"id\": 36\r\n      },\r\n      {\r\n        \"name\": \"\u30D2\u30BD\u30D2\u30BD\",\r\n       
-    \"id\": 37\r\n      }\r\n    ],\r\n    \"version\": \"0.14.4\"\r\n  },\r\n  {\r\n   
-    \"name\": \"\u305A\u3093\u3060\u3082\u3093\",\r\n    \"styles\": [\r\n      {\r\n       
-    \"name\": \"\u30CE\u30FC\u30DE\u30EB\",\r\n        \"id\": 3\r\n      },\r\n     
-    {\r\n        \"name\": \"\u3042\u307E\u3042\u307E\",\r\n        \"id\": 1\r\n     
-    },\r\n      {\r\n        \"name\": \"\u30C4\u30F3\u30C4\u30F3\",\r\n        \"id\":
-    7\r\n      },\r\n      {\r\n        \"name\": \"\u30BB\u30AF\u30B7\u30FC\",\r\n       
-    \"id\": 5\r\n      },\r\n      {\r\n        \"name\": \"\u3055\u3055\u3084\u304D\",\r\n       
-    \"id\": 22\r\n      },\r\n      {\r\n        \"name\": \"\u30D2\u30BD\u30D2\u30BD\",\r\n       
-    \"id\": 38\r\n      }\r\n    ],\r\n    \"version\": \"0.14.4\"\r\n  },\r\n  {\r\n   
-    \"name\": \"\u6625\u65E5\u90E8\u3064\u3080\u304E\",\r\n    \"styles\": [\r\n     
-    {\r\n        \"name\": \"\u30CE\u30FC\u30DE\u30EB\",\r\n        \"id\": 8\r\n     
-    }\r\n    ],\r\n    \"version\": \"0.14.4\"\r\n  },\r\n  {\r\n    \"name\": \"\u96E8\u6674\u306F\u3046\",\r\n   
-    \"styles\": [\r\n      {\r\n        \"name\": \"\u30CE\u30FC\u30DE\u30EB\",\r\n       
-    \"id\": 10\r\n      }\r\n    ],\r\n    \"version\": \"0.14.4\"\r\n  },\r\n  {\r\n   
-    \"name\": \"\u6CE2\u97F3\u30EA\u30C4\",\r\n    \"styles\": [\r\n      {\r\n       
-    \"name\": \"\u30CE\u30FC\u30DE\u30EB\",\r\n        \"id\": 9\r\n      },\r\n     
-    {\r\n        \"name\": \"\u30AF\u30A4\u30FC\u30F3\",\r\n        \"id\": 65\r\n     
-    }\r\n    ],\r\n    \"version\": \"0.14.4\"\r\n  },\r\n  {\r\n    \"name\": \"\u7384\u91CE\u6B66\u5B8F\",\r\n   
-    \"styles\": [\r\n      {\r\n        \"name\": \"\u30CE\u30FC\u30DE\u30EB\",\r\n       
-    \"id\": 11\r\n      },\r\n      {\r\n        \"name\": \"\u559C\u3073\",\r\n       
-    \"id\": 39\r\n      },\r\n      {\r\n        \"name\": \"\u30C4\u30F3\u30AE\u30EC\",\r\n       
-    \"id\": 40\r\n      },\r\n      {\r\n        \"name\": \"\u60B2\u3057\u307F\",\r\n       
-    \"id\": 41\r\n      }\r\n    ],\r\n    \"version\": \"0.14.4\"\r\n  },\r\n  {\r\n   
-    \"name\": \"\u767D\u4E0A\u864E\u592A\u90CE\",\r\n    \"styles\": [\r\n      {\r\n       
-    \"name\": \"\u3075\u3064\u3046\",\r\n        \"id\": 12\r\n      },\r\n     
-    {\r\n        \"name\": \"\u308F\u30FC\u3044\",\r\n        \"id\": 32\r\n     
-    },\r\n      {\r\n        \"name\": \"\u3073\u304F\u3073\u304F\",\r\n        \"id\":
-    33\r\n      },\r\n      {\r\n        \"name\": \"\u304A\u3053\",\r\n        \"id\":
-    34\r\n      },\r\n      {\r\n        \"name\": \"\u3073\u3048\u30FC\u3093\",\r\n       
-    \"id\": 35\r\n      }\r\n    ],\r\n    \"version\": \"0.14.4\"\r\n  },\r\n  {\r\n   
-    \"name\": \"\u9752\u5C71\u9F8D\u661F\",\r\n    \"styles\": [\r\n      {\r\n       
-    \"name\": \"\u30CE\u30FC\u30DE\u30EB\",\r\n        \"id\": 13\r\n      }\r\n   
-    ],\r\n    \"version\": \"0.14.4\"\r\n  },\r\n  {\r\n    \"name\": \"\u51A5\u9CF4\u3072\u307E\u308A\",\r\n   
-    \"styles\": [\r\n      {\r\n        \"name\": \"\u30CE\u30FC\u30DE\u30EB\",\r\n       
-    \"id\": 14\r\n      }\r\n    ],\r\n    \"version\": \"0.14.4\"\r\n  },\r\n  {\r\n   
-    \"name\": \"\u4E5D\u5DDE\u305D\u3089\",\r\n    \"styles\": [\r\n      {\r\n       
-    \"name\": \"\u30CE\u30FC\u30DE\u30EB\",\r\n        \"id\": 16\r\n      },\r\n     
-    {\r\n        \"name\": \"\u3042\u307E\u3042\u307E\",\r\n        \"id\": 15\r\n     
-    },\r\n      {\r\n        \"name\": \"\u30C4\u30F3\u30C4\u30F3\",\r\n        \"id\":
-    18\r\n      },\r\n      {\r\n        \"name\": \"\u30BB\u30AF\u30B7\u30FC\",\r\n       
-    \"id\": 17\r\n      },\r\n      {\r\n        \"name\": \"\u3055\u3055\u3084\u304D\",\r\n       
-    \"id\": 19\r\n      }\r\n    ],\r\n    \"version\": \"0.14.4\"\r\n  },\r\n  {\r\n   
-    \"name\": \"\u3082\u3061\u5B50\u3055\u3093\",\r\n    \"styles\": [\r\n      {\r\n       
-    \"name\": \"\u30CE\u30FC\u30DE\u30EB\",\r\n        \"id\": 20\r\n      },\r\n     
-    {\r\n        \"name\": \"\u30BB\u30AF\u30B7\u30FC\uFF0F\u3042\u3093\u5B50\",\r\n       
-    \"id\": 66\r\n      }\r\n    ],\r\n    \"version\": \"0.14.4\"\r\n  },\r\n  {\r\n   
-    \"name\": \"\u5263\u5D0E\u96CC\u96C4\",\r\n    \"styles\": [\r\n      {\r\n       
-    \"name\": \"\u30CE\u30FC\u30DE\u30EB\",\r\n        \"id\": 21\r\n      }\r\n   
-    ],\r\n    \"version\": \"0.14.4\"\r\n  },\r\n  {\r\n    \"name\": \"WhiteCUL\",\r\n   
-    \"styles\": [\r\n      {\r\n        \"name\": \"\u30CE\u30FC\u30DE\u30EB\",\r\n       
-    \"id\": 23\r\n      },\r\n      {\r\n        \"name\": \"\u305F\u306E\u3057\u3044\",\r\n       
-    \"id\": 24\r\n      },\r\n      {\r\n        \"name\": \"\u304B\u306A\u3057\u3044\",\r\n       
-    \"id\": 25\r\n      },\r\n      {\r\n        \"name\": \"\u3073\u3048\u30FC\u3093\",\r\n       
-    \"id\": 26\r\n      }\r\n    ],\r\n    \"version\": \"0.14.4\"\r\n  },\r\n  {\r\n   
-    \"name\": \"\u5F8C\u9B3C\",\r\n    \"styles\": [\r\n      {\r\n        \"name\":
-    \"\u4EBA\u9593ver.\",\r\n        \"id\": 27\r\n      },\r\n      {\r\n       
-    \"name\": \"\u306C\u3044\u3050\u308B\u307Fver.\",\r\n        \"id\": 28\r\n     
-    }\r\n    ],\r\n    \"version\": \"0.14.4\"\r\n  },\r\n  {\r\n    \"name\": \"No.7\",\r\n   
-    \"styles\": [\r\n      {\r\n        \"name\": \"\u30CE\u30FC\u30DE\u30EB\",\r\n       
-    \"id\": 29\r\n      },\r\n      {\r\n        \"name\": \"\u30A2\u30CA\u30A6\u30F3\u30B9\",\r\n       
-    \"id\": 30\r\n      },\r\n      {\r\n        \"name\": \"\u8AAD\u307F\u805E\u304B\u305B\",\r\n       
-    \"id\": 31\r\n      }\r\n    ],\r\n    \"version\": \"0.14.4\"\r\n  },\r\n  {\r\n   
-    \"name\": \"\u3061\u3073\u5F0F\u3058\u3044\",\r\n    \"styles\": [\r\n      {\r\n       
-    \"name\": \"\u30CE\u30FC\u30DE\u30EB\",\r\n        \"id\": 42\r\n      }\r\n   
-    ],\r\n    \"version\": \"0.14.4\"\r\n  },\r\n  {\r\n    \"name\": \"\u6AFB\u6B4C\u30DF\u30B3\",\r\n   
-    \"styles\": [\r\n      {\r\n        \"name\": \"\u30CE\u30FC\u30DE\u30EB\",\r\n       
-    \"id\": 43\r\n      },\r\n      {\r\n        \"name\": \"\u7B2C\u4E8C\u5F62\u614B\",\r\n       
-    \"id\": 44\r\n      },\r\n      {\r\n        \"name\": \"\u30ED\u30EA\",\r\n       
-    \"id\": 45\r\n      }\r\n    ],\r\n    \"version\": \"0.14.4\"\r\n  },\r\n  {\r\n   
-    \"name\": \"\u5C0F\u591C/SAYO\",\r\n    \"styles\": [\r\n      {\r\n        \"name\":
-    \"\u30CE\u30FC\u30DE\u30EB\",\r\n        \"id\": 46\r\n      }\r\n    ],\r\n   
-    \"version\": \"0.14.4\"\r\n  },\r\n  {\r\n    \"name\": \"\u30CA\u30FC\u30B9\u30ED\u30DC\uFF3F\u30BF\u30A4\u30D7\uFF34\",\r\n   
-    \"styles\": [\r\n      {\r\n        \"name\": \"\u30CE\u30FC\u30DE\u30EB\",\r\n       
-    \"id\": 47\r\n      },\r\n      {\r\n        \"name\": \"\u697D\u3005\",\r\n       
-    \"id\": 48\r\n      },\r\n      {\r\n        \"name\": \"\u6050\u6016\",\r\n       
-    \"id\": 49\r\n      },\r\n      {\r\n        \"name\": \"\u5185\u7DD2\u8A71\",\r\n       
-    \"id\": 50\r\n      }\r\n    ],\r\n    \"version\": \"0.14.4\"\r\n  },\r\n  {\r\n   
-    \"name\": \"\u2020\u8056\u9A0E\u58EB \u7D05\u685C\u2020\",\r\n    \"styles\":
-    [\r\n      {\r\n        \"name\": \"\u30CE\u30FC\u30DE\u30EB\",\r\n        \"id\":
-    51\r\n      }\r\n    ],\r\n    \"version\": \"0.14.4\"\r\n  },\r\n  {\r\n   
-    \"name\": \"\u96C0\u677E\u6731\u53F8\",\r\n    \"styles\": [\r\n      {\r\n       
-    \"name\": \"\u30CE\u30FC\u30DE\u30EB\",\r\n        \"id\": 52\r\n      }\r\n   
-    ],\r\n    \"version\": \"0.14.4\"\r\n  },\r\n  {\r\n    \"name\": \"\u9E92\u30F6\u5CF6\u5B97\u9E9F\",\r\n   
-    \"styles\": [\r\n      {\r\n        \"name\": \"\u30CE\u30FC\u30DE\u30EB\",\r\n       
-    \"id\": 53\r\n      }\r\n    ],\r\n    \"version\": \"0.14.4\"\r\n  },\r\n  {\r\n   
-    \"name\": \"\u6625\u6B4C\u30CA\u30CA\",\r\n    \"styles\": [\r\n      {\r\n       
-    \"name\": \"\u30CE\u30FC\u30DE\u30EB\",\r\n        \"id\": 54\r\n      }\r\n   
-    ],\r\n    \"version\": \"0.14.4\"\r\n  },\r\n  {\r\n    \"name\": \"\u732B\u4F7F\u30A2\u30EB\",\r\n   
-    \"styles\": [\r\n      {\r\n        \"name\": \"\u30CE\u30FC\u30DE\u30EB\",\r\n       
-    \"id\": 55\r\n      },\r\n      {\r\n        \"name\": \"\u304A\u3061\u3064\u304D\",\r\n       
-    \"id\": 56\r\n      },\r\n      {\r\n        \"name\": \"\u3046\u304D\u3046\u304D\",\r\n       
-    \"id\": 57\r\n      }\r\n    ],\r\n    \"version\": \"0.14.4\"\r\n  },\r\n  {\r\n   
-    \"name\": \"\u732B\u4F7F\u30D3\u30A3\",\r\n    \"styles\": [\r\n      {\r\n       
-    \"name\": \"\u30CE\u30FC\u30DE\u30EB\",\r\n        \"id\": 58\r\n      },\r\n     
-    {\r\n        \"name\": \"\u304A\u3061\u3064\u304D\",\r\n        \"id\": 59\r\n     
-    },\r\n      {\r\n        \"name\": \"\u4EBA\u898B\u77E5\u308A\",\r\n        \"id\":
-    60\r\n      }\r\n    ],\r\n    \"version\": \"0.14.4\"\r\n  },\r\n  {\r\n   
-    \"name\": \"\u4E2D\u56FD\u3046\u3055\u304E\",\r\n    \"styles\": [\r\n      {\r\n       
-    \"name\": \"\u30CE\u30FC\u30DE\u30EB\",\r\n        \"id\": 61\r\n      },\r\n     
-    {\r\n        \"name\": \"\u304A\u3069\u308D\u304D\",\r\n        \"id\": 62\r\n     
-    },\r\n      {\r\n        \"name\": \"\u3053\u308F\u304C\u308A\",\r\n        \"id\":
-    63\r\n      },\r\n      {\r\n        \"name\": \"\u3078\u308D\u3078\u308D\",\r\n       
-    \"id\": 64\r\n      }\r\n    ],\r\n    \"version\": \"0.14.4\"\r\n  }\r\n]\r\n"
+    styles:
+    - name: "\u30CE\u30FC\u30DE\u30EB"
+      id: 2
+    - name: "\u3042\u307E\u3042\u307E"
+      id: 0
+    - name: "\u30C4\u30F3\u30C4\u30F3"
+      id: 6
+    - name: "\u30BB\u30AF\u30B7\u30FC"
+      id: 4
+    - name: "\u3055\u3055\u3084\u304D"
+      id: 36
+    - name: "\u30D2\u30BD\u30D2\u30BD"
+      id: 37
+  - name: "\u305A\u3093\u3060\u3082\u3093"
+    styles:
+    - name: "\u30CE\u30FC\u30DE\u30EB"
+      id: 3
+    - name: "\u3042\u307E\u3042\u307E"
+      id: 1
+    - name: "\u30C4\u30F3\u30C4\u30F3"
+      id: 7
+    - name: "\u30BB\u30AF\u30B7\u30FC"
+      id: 5
+    - name: "\u3055\u3055\u3084\u304D"
+      id: 22
+    - name: "\u30D2\u30BD\u30D2\u30BD"
+      id: 38
+  - name: "\u6625\u65E5\u90E8\u3064\u3080\u304E"
+    styles:
+    - name: "\u30CE\u30FC\u30DE\u30EB"
+      id: 8
+  - name: "\u96E8\u6674\u306F\u3046"
+    styles:
+    - name: "\u30CE\u30FC\u30DE\u30EB"
+      id: 10
+  - name: "\u6CE2\u97F3\u30EA\u30C4"
+    styles:
+    - name: "\u30CE\u30FC\u30DE\u30EB"
+      id: 9
+    - name: "\u30AF\u30A4\u30FC\u30F3"
+      id: 65
+  - name: "\u7384\u91CE\u6B66\u5B8F"
+    styles:
+    - name: "\u30CE\u30FC\u30DE\u30EB"
+      id: 11
+    - name: "\u559C\u3073"
+      id: 39
+    - name: "\u30C4\u30F3\u30AE\u30EC"
+      id: 40
+    - name: "\u60B2\u3057\u307F"
+      id: 41
+  - name: "\u767D\u4E0A\u864E\u592A\u90CE"
+    styles:
+    - name: "\u3075\u3064\u3046"
+      id: 12
+    - name: "\u308F\u30FC\u3044"
+      id: 32
+    - name: "\u3073\u304F\u3073\u304F"
+      id: 33
+    - name: "\u304A\u3053"
+      id: 34
+    - name: "\u3073\u3048\u30FC\u3093"
+      id: 35
+  - name: "\u9752\u5C71\u9F8D\u661F"
+    styles:
+    - name: "\u30CE\u30FC\u30DE\u30EB"
+      id: 13
+  - name: "\u51A5\u9CF4\u3072\u307E\u308A"
+    styles:
+    - name: "\u30CE\u30FC\u30DE\u30EB"
+      id: 14
+  - name: "\u4E5D\u5DDE\u305D\u3089"
+    styles:
+    - name: "\u30CE\u30FC\u30DE\u30EB"
+      id: 16
+    - name: "\u3042\u307E\u3042\u307E"
+      id: 15
+    - name: "\u30C4\u30F3\u30C4\u30F3"
+      id: 18
+    - name: "\u30BB\u30AF\u30B7\u30FC"
+      id: 17
+    - name: "\u3055\u3055\u3084\u304D"
+      id: 19
+  - name: "\u3082\u3061\u5B50\u3055\u3093"
+    styles:
+    - name: "\u30CE\u30FC\u30DE\u30EB"
+      id: 20
+    - name: "\u30BB\u30AF\u30B7\u30FC\uFF0F\u3042\u3093\u5B50"
+      id: 66
+  - name: "\u5263\u5D0E\u96CC\u96C4"
+    styles:
+    - name: "\u30CE\u30FC\u30DE\u30EB"
+      id: 21
+  - name: WhiteCUL
+    styles:
+    - name: "\u30CE\u30FC\u30DE\u30EB"
+      id: 23
+    - name: "\u305F\u306E\u3057\u3044"
+      id: 24
+    - name: "\u304B\u306A\u3057\u3044"
+      id: 25
+    - name: "\u3073\u3048\u30FC\u3093"
+      id: 26
+  - name: "\u5F8C\u9B3C"
+    styles:
+    - name: "\u4EBA\u9593ver."
+      id: 27
+    - name: "\u306C\u3044\u3050\u308B\u307Fver."
+      id: 28
+  - name: No.7
+    styles:
+    - name: "\u30CE\u30FC\u30DE\u30EB"
+      id: 29
+    - name: "\u30A2\u30CA\u30A6\u30F3\u30B9"
+      id: 30
+    - name: "\u8AAD\u307F\u805E\u304B\u305B"
+      id: 31
+  - name: "\u3061\u3073\u5F0F\u3058\u3044"
+    styles:
+    - name: "\u30CE\u30FC\u30DE\u30EB"
+      id: 42
+  - name: "\u6AFB\u6B4C\u30DF\u30B3"
+    styles:
+    - name: "\u30CE\u30FC\u30DE\u30EB"
+      id: 43
+    - name: "\u7B2C\u4E8C\u5F62\u614B"
+      id: 44
+    - name: "\u30ED\u30EA"
+      id: 45
+  - name: "\u5C0F\u591C/SAYO"
+    styles:
+    - name: "\u30CE\u30FC\u30DE\u30EB"
+      id: 46
+  - name: "\u30CA\u30FC\u30B9\u30ED\u30DC\uFF3F\u30BF\u30A4\u30D7\uFF34"
+    styles:
+    - name: "\u30CE\u30FC\u30DE\u30EB"
+      id: 47
+    - name: "\u697D\u3005"
+      id: 48
+    - name: "\u6050\u6016"
+      id: 49
+    - name: "\u5185\u7DD2\u8A71"
+      id: 50
+  - name: "\u2020\u8056\u9A0E\u58EB \u7D05\u685C\u2020"
+    styles:
+    - name: "\u30CE\u30FC\u30DE\u30EB"
+      id: 51
+  - name: "\u96C0\u677E\u6731\u53F8"
+    styles:
+    - name: "\u30CE\u30FC\u30DE\u30EB"
+      id: 52
+  - name: "\u9E92\u30F6\u5CF6\u5B97\u9E9F"
+    styles:
+    - name: "\u30CE\u30FC\u30DE\u30EB"
+      id: 53
+  - name: "\u6625\u6B4C\u30CA\u30CA"
+    styles:
+    - name: "\u30CE\u30FC\u30DE\u30EB"
+      id: 54
+  - name: "\u732B\u4F7F\u30A2\u30EB"
+    styles:
+    - name: "\u30CE\u30FC\u30DE\u30EB"
+      id: 55
+    - name: "\u304A\u3061\u3064\u304D"
+      id: 56
+    - name: "\u3046\u304D\u3046\u304D"
+      id: 57
+  - name: "\u732B\u4F7F\u30D3\u30A3"
+    styles:
+    - name: "\u30CE\u30FC\u30DE\u30EB"
+      id: 58
+    - name: "\u304A\u3061\u3064\u304D"
+      id: 59
+    - name: "\u4EBA\u898B\u77E5\u308A"
+      id: 60
+  - name: "\u4E2D\u56FD\u3046\u3055\u304E"
+    styles:
+    - name: "\u30CE\u30FC\u30DE\u30EB"
+      id: 61
+    - name: "\u304A\u3069\u308D\u304D"
+      id: 62
+    - name: "\u3053\u308F\u304C\u308A"
+      id: 63
+    - name: "\u3078\u308D\u3078\u308D"
+      id: 64
+  jsonObject: {fileID: 4900000, guid: 589b9f98d25534b4da1b0f3c7546851c, type: 3}

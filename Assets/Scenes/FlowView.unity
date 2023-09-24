@@ -213,6 +213,7 @@ GameObject:
   - component: {fileID: 530527972}
   - component: {fileID: 530527973}
   - component: {fileID: 530527974}
+  - component: {fileID: 530527975}
   m_Layer: 0
   m_Name: Settings
   m_TagString: Untagged
@@ -248,13 +249,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   flowSpeed: 2
-  fontSize: 45
+  fontSize: 50
   topMargin: 5
   SettingPanel: {fileID: 93570134}
   urlInputField: {fileID: 1317309203}
-  useGPT: 1
-  isTest: 1
-  GPT_WebAPI: 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
+  useGPT: 0
+  useVoiceVox: 1
+  useVoiceOnGPT: 1
+  useTestChat: 0
+  useNameOnVoice: 0
+  GPT_WebAPI: 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
   VOICEVOX_WebAPI: B2u418S27023734
   url: https://streamkit.discord.com/overlay/chat/694543179885838376/1150323972932636753?icon=true&online=true&logo=white&text_color=%23ffffff&text_size=14&text_outline_color=%23000000&text_outline_size=0&text_shadow_color=%23000000&text_shadow_size=0&bg_color=%231e2124&bg_opacity=0.95&bg_shadow_color=%23000000&bg_shadow_size=0&invite_code=wu8pUa3nZ7&limit_speaking=false&small_avatars=false&hide_names=false&fade_chat=0
 --- !u!114 &530527974
@@ -271,6 +275,27 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isHeadless: 1
   LoadingCommentObj: {fileID: 716405337}
+--- !u!114 &530527975
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 530527971}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a06d697eba99f0f4db2ae913b20e3bf9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  commentParent: {fileID: 1116385473}
+  flowCommentPrefab: {fileID: 7350981750920773044, guid: c49875a34d0dc8b49b794aa5c969bb49, type: 3}
+  chatMaterial:
+    Programmer: {fileID: 2100000, guid: 1a4c90eb530880d4d9aeaa744c2ac07c, type: 2}
+    Illustrator: {fileID: 2100000, guid: fe7758c187f05564d83a0a1bc2d2cc50, type: 2}
+    SoundCreator: {fileID: 2100000, guid: 0dcc1bbcdaed84e409c68d62e72721b9, type: 2}
+    ScenarioWriter: {fileID: 2100000, guid: a8a186613c83e314d97a9c6505e74734, type: 2}
+    GPT: {fileID: 2100000, guid: 66003178ced563c4d9d50d0df6d28089, type: 2}
+    Other: {fileID: 2100000, guid: 76c9d235817b6324280071b5620c3055, type: 2}
 --- !u!1 &535639367
 GameObject:
   m_ObjectHideFlags: 0
@@ -1080,7 +1105,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1116385473}
-  - component: {fileID: 1116385474}
   m_Layer: 5
   m_Name: CommentParent
   m_TagString: Untagged
@@ -1108,20 +1132,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1116385474
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1116385472}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a06d697eba99f0f4db2ae913b20e3bf9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  commentParent: {fileID: 1116385473}
-  flowCommentPrefab: {fileID: 7350981750920773044, guid: c49875a34d0dc8b49b794aa5c969bb49, type: 3}
 --- !u!1 &1317309201
 GameObject:
   m_ObjectHideFlags: 0

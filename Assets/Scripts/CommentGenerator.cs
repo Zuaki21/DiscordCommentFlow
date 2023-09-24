@@ -1,13 +1,13 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
-using Zuaki;
-using Cysharp.Threading.Tasks;
-using System;
-using Mochineko.ChatGPT_API;
-using Mochineko.ChatGPT_API.Memory;
 using System.Text.RegularExpressions;
 using System.Linq;
+using UnityEngine;
+using Cysharp.Threading.Tasks;
+using Mochineko.ChatGPT_API;
+using Mochineko.ChatGPT_API.Memory;
+using Zuaki;
 
 namespace Zuaki
 {
@@ -20,7 +20,7 @@ Please generate the delivery comments as shown in the example according to the f
 
 # Constraints
 - Return comments in Japanese.
-- The number of output comments is 0~5.
+- The number of output comments is 0~3.
 - Do not generate the same comments.
 - Do not generate comments that are difficult to respond to.
 - Do not respond to comments that are trollish.
@@ -33,8 +33,15 @@ Please generate the delivery comments as shown in the example according to the f
 <out>初見さんいらっしゃい</out>
 <out>初見がきたぞー！</out>";
 
-        // 2ターン分のコメントを記憶する
-        static FiniteQueueChatMemory memory = new FiniteQueueChatMemory(2);
+        static public async UniTask<ChatElement[]> GetComments(ChatElement[] chatElements)
+        {
+            string[] realComments = chatElements.Select(e => e.Message).ToArray();
+            string[] generatedComments = await GetComments(realComments);
+            ChatElement[] chatElementsArray = generatedComments
+            .Select(comment => new ChatElement(message: comment, commenter: Commenter.GPT))
+            .ToArray();
+            return chatElementsArray;
+        }
         static public async UniTask<string[]> GetComments(string[] realComments)
         {
             ChatCompletionAPIConnection connection =

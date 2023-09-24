@@ -53,6 +53,7 @@ namespace Zuaki
                 _ = CheckNewComment();
             });
         }
+
         public void ChangeURL(string newUrl)
         {
             Settings.Instance.url = newUrl;
@@ -71,26 +72,23 @@ namespace Zuaki
                 if (newChatElements.Count > 0)
                 {
                     if (LoadingCommentObj.activeSelf) LoadingCommentObj.SetActive(false);
-                    // 新しいコメントがあったら追加
-                    string[] comments = newChatElements.Select(e => e.Message).ToArray();
-                    AddComment(comments);
+                    AddComment(newChatElements.ToArray());
                 }
                 await UniTask.Delay(1000);// 1秒待つ
             }
         }
-        async void AddComment(string[] comments)
+
+        async void AddComment(ChatElement[] chatElements)
         {
-            if (comments.Length == 0) return;
+            if (chatElements.Length == 0) return;
             // 新しいコメントがあったら追加
-            ChatManager.Instance.AddChatElement(comments);
+            ChatManager.AddChatElement(chatElements);
 
             // GPTを使う設定の場合はコメントを生成して追加
             if (Settings.Instance.useGPT)
             {
-                string[] generatedComments = await CommentGenerator.GetComments(comments);
-                //ChatManager.Instance.AddChatElement(generatedComments);
-                ChatManager.Instance.AddChatElement(generatedComments);
-
+                ChatElement[] generatedComments = await CommentGenerator.GetComments(chatElements);
+                ChatManager.AddChatElement(generatedComments);
             }
         }
 
@@ -98,29 +96,49 @@ namespace Zuaki
         {
             await UniTask.SwitchToThreadPool();
 
+            List<ChatElement> chatElements = GetComment();
+            List<ChatElement> newChatElements = FilterNewComments(chatElements);
+
+            await UniTask.SwitchToMainThread(); // メインスレッドに戻る
+            return newChatElements;
+        }
+
+        List<ChatElement> GetComment()
+        {
             ReadOnlyCollection<IWebElement> messageElements = driver.FindElementsByClassName("Chat_messageText__k79m4");
             ReadOnlyCollection<IWebElement> nameElements = driver.FindElementsByClassName("Chat_username__5fTg6");
             ReadOnlyCollection<IWebElement> timeElements = driver.FindElementsByClassName("Chat_timestamp__nyBmU");
 
             // 取得した要素をnewChatElementにとして持つ
-            List<ChatElement> newChatElements = new List<ChatElement>();
+            List<ChatElement> chatElements = new List<ChatElement>();
+
             for (int i = 0; i < messageElements.Count; i++)
             {
                 // メッセージの内容がないならスキップ
+                if (messageElements[i] == null) continue;
+                if (messageElements[i].Text == null) continue;
                 if (messageElements[i].Text == "") continue;
 
-                ChatElement chatElement = new ChatElement();
-                chatElement.Message = messageElements[i].Text;
-                chatElement.Name = nameElements[i].Text;
-                chatElement.Time = timeElements[i].Text;
-
+                ChatElement chatElement = new ChatElement(
+                    messageElements[i].Text,
+                    nameElements[i].Text,
+                    timeElements[i].Text,
+                    nameElements[i].GetAttribute("style")
+                );
+                chatElements.Add(chatElement);
+            }
+            return chatElements;
+        }
+        List<ChatElement> FilterNewComments(List<ChatElement> chatElements)
+        {
+            List<ChatElement> newChatElements = new List<ChatElement>();
+            foreach (ChatElement chatElement in chatElements)
+            {
                 // 重複しているかどうかをチェック
                 bool isDuplicate = false;
-                foreach (ChatElement element in chatElementHistory)
+                foreach (ChatElement oldChatElement in chatElementHistory)
                 {
-                    if (chatElement.Message == element.Message &&
-                        chatElement.Name == element.Name &&
-                        chatElement.Time == element.Time)
+                    if (chatElement.IsEqual(oldChatElement))
                     {
                         isDuplicate = true;
                         break;
@@ -138,27 +156,72 @@ namespace Zuaki
                     chatElementHistory.RemoveAt(0);
                 }
             }
-
-            await UniTask.SwitchToMainThread(); // メインスレッドに戻る
             return newChatElements;
         }
 
+
         void OnDestroy()
         {
-            driver.Dispose();
+            QuitWindow();
         }
 
         public void QuitWindow()
         {
-            driver.Quit();
+            if (driver != null)
+                driver.Quit();
         }
     }
 
     public class ChatElement
     {
-        public string Message;
-        public string Name;
-        public string Time;
+        public string Message { get; private set; } = null;
+        public string Name { get; private set; } = null;
+        public string Time { get; private set; } = null;
+        public Commenter Commenter = Commenter.Other;
+        public int SpeakerID => SpeakerData.GetSpeakerID(Commenter);
+        public ChatElement(string message = null, string name = null, string time = null, Commenter commenter = Commenter.Other)
+        {
+            this.Message = message;
+            this.Name = name;
+            this.Time = time;
+            this.Commenter = commenter;
+        }
+        public ChatElement(string message = null, string name = null, string time = null, string style = null)
+        {
+            this.Message = message;
+            this.Name = name;
+            this.Time = time;
+            this.Commenter = GetCommenter(style);
+        }
+
+        Commenter GetCommenter(string style)
+        {
+            if (style.Contains("color: rgb(241, 196, 15);")) return Commenter.Programmer;
+            if (style.Contains("color: rgb(46, 204, 113);")) return Commenter.Illustrator;
+            if (style.Contains("color: rgb(52, 152, 219);")) return Commenter.SoundCreator;
+            if (style.Contains("color: rgb(231, 76, 60);")) return Commenter.ScenarioWriter;
+            return Commenter.Other;
+        }
+        public bool IsEqual(ChatElement other)
+        {
+            if (this.Message == other.Message &&
+                this.Name == other.Name &&
+                this.Time == other.Time &&
+                this.Commenter == other.Commenter)
+            {
+                return true;
+            }
+            return false;
+        }
+    }
+    public enum Commenter
+    {
+        Programmer,
+        Illustrator,
+        SoundCreator,
+        ScenarioWriter,
+        GPT,
+        Other,
     }
 
 }

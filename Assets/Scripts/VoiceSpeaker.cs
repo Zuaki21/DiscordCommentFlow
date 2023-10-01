@@ -3,6 +3,13 @@ using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Zuaki;
+using UnityEngine.Audio;
+using System.Text.RegularExpressions;
+
+
+#if UNITY_EDITOR
+using UnityEditor;
+# endif
 
 namespace Zuaki
 {
@@ -18,7 +25,21 @@ namespace Zuaki
         {
             PostVoiceVoxRequest();
         }
-
+        async UniTask<AudioClip> GetChatClip(ChatElement chatElement)
+        {
+            AudioClip newClip = null;
+            if (Settings.Instance.useLocalVoiceVox)
+            {
+                VoiceVoxLocalManager voiceVoxManager = new VoiceVoxLocalManager();//VoiceVoxManagerクラスを作成
+                await voiceVoxManager.DownloadAudioClip(chatElement.Message, chatElement.SpeakerID);//音声合成する
+                newClip = voiceVoxManager.AudioClip; //生成した音声をAudioClipに設定
+            }
+            else
+            {
+                newClip = await VoiceVoxWebManager.PostVoiceVoxWebRequest(chatElement);
+            }
+            return newClip;
+        }
         async void PostVoiceVoxRequest()
         {
             while (true)
@@ -26,7 +47,10 @@ namespace Zuaki
                 if (chatElementList.Count > 0 && ClipList.Count < 2)
                 {
                     CombineComment();// 同時に読み上げられそうなら結合する
-                    AudioClip newClip = await VoiceVoxWebManager.PostVoiceVoxWebRequest(chatElementList[0]);
+                    AudioClip newClip = await GetChatClip(chatElementList[0]);
+#if UNITY_EDITOR
+                    if (UnityEditor.EditorApplication.isPlaying == false) return;
+#endif
                     if (newClip != null) ClipList.Add(newClip);
                     chatElementList.RemoveAt(0);
                     await UniTask.Delay(500);
@@ -58,29 +82,35 @@ namespace Zuaki
         public static void AddComment(ChatElement[] newChatElements)
         {
             // GPTのコメントを読み上げない設定の場合は読み上げない
-            if (newChatElements[0].Commenter == Commenter.GPT && Settings.Instance.useVoiceOnGPT == false) return;
+            if (newChatElements[0].Commenter == SpeakerRole.GPT && Settings.Instance.useVoiceVoxOnGPT == false) return;
 
             foreach (ChatElement newChatElement in newChatElements)
             {
-                string message = RemoveSpaces(newChatElement.Message);
+                string message = CleanUpText(newChatElement.Message);
 
-                if (Settings.Instance.useNameOnVoice && newChatElement.Name != null && newChatElement.Commenter != Commenter.GPT)
+                if (Settings.Instance.useNameOnVoice && newChatElement.Name != null && newChatElement.Commenter != SpeakerRole.GPT)
                 {
-                    string name = RemoveSpaces(newChatElement.Name);
+                    string name = CleanUpText(newChatElement.Name);
                     message = $"{name}さん{message}";
                 }
                 ChatElement fixedChatElement = new ChatElement(message, commenter: newChatElement.Commenter);
                 ChatElementList.Add(fixedChatElement);
             }
         }
-        static string RemoveSpaces(string input)
+        // テキストを整形する
+        static string CleanUpText(string input)
         {
-            // 半角スペースと全角スペースを削除して返す
-            return input.Replace(" ", "").Replace("　", "");
+            // 全角スペースと半角スペースを削除
+            string noSpaceText = Regex.Replace(input, "[ 　]", string.Empty);
+            // タグを削除
+            string noTagText = Regex.Replace(noSpaceText, "<[^>]*?>", string.Empty);
+            // ￥を円に変換
+            return Regex.Replace(noTagText, @"￥(\d+)", match => match.Groups[1].Value + "円");
         }
 
         protected void Update()
         {
+            // 読み上げているコメントが無いときにコメントを読み上げる
             if (SoundManager.IsPlayingBGM == false)
             {
                 PlayCommentClip();
@@ -111,6 +141,7 @@ namespace Zuaki
     }
     public static class AudioUtils
     {
+        /// <summary>AudioClip を結合します</summary>
         public static AudioClip Combine(AudioClip clip_A, AudioClip clip_B)
         {
             if (clip_A == null || clip_B == null)

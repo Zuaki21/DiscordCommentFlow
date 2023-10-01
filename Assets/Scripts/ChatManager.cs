@@ -7,6 +7,10 @@ using System.Linq;
 using Cysharp.Threading.Tasks;
 using Unity.VisualScripting;
 using UnityEngine.UI;
+using System.Text.RegularExpressions;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 
 namespace Zuaki
@@ -17,10 +21,10 @@ namespace Zuaki
         [SerializeField] Transform commentParent;
         [SerializeField] GameObject flowCommentPrefab;
         [SerializeField] ChatMaterial chatMaterial;
+        [SerializeField] SuperChatMaterial[] superChatMaterials;
 
         float topLocalY = 335;
         float rightLocalX = 650;
-        float leftLocalY = -650;
 
         public static void AddChatElement(ChatElement[] chatElements)
         {
@@ -38,8 +42,24 @@ namespace Zuaki
             string[] newComments = chatElements.Select(e => e.Message).ToArray();
             foreach (ChatElement newElement in chatElements)
             {
-                //新しいコメントを生成
+#if UNITY_EDITOR
+                if (EditorApplication.isPlaying == false) return;
+#endif
+                Material superChatMaterial = null;
+                int chatMoney = 0;
+                chatMoney = JudgeSuperChat(newElement.Message);
+                superChatMaterial = GetSuperChatMaterial(chatMoney);
+
                 GameObject newFlowChatObject = Instantiate(flowCommentPrefab);
+
+                if (chatMoney > 0)
+                {
+                    var background = newFlowChatObject.GetComponent<TextMeshProBackground>();
+                    background.enabled = true;
+                    background.material = superChatMaterial;
+                }
+
+                //新しいコメントを生成
                 TextMeshProUGUI textMeshProUGUI = newFlowChatObject.GetComponent<TextMeshProUGUI>();
                 //コメントを設定
                 textMeshProUGUI.text = newElement.Message;
@@ -54,9 +74,42 @@ namespace Zuaki
                 //コメントの位置が重ならないように必要に応じて変更
                 newFlowChatObject.transform.localPosition = GetFlowChatPosition(flowComment);
                 allFlowComments.Add(flowComment);
+                if (chatMoney > 0)
+                    flowComment.fixedSpeedParam = 0.5f;
 
                 await UniTask.Delay(millisecondsDelay: Random.Range(0, 2000));
             }
+        }
+        int JudgeSuperChat(string text)
+        {
+            // 正規表現パターンを定義
+            string pattern = @"￥(\d+)";
+
+            // 正規表現で金額を抽出
+            Match match = Regex.Match(text, pattern);
+
+            // 金額を取得し、文字列から除外
+            int amount = 0;
+            string remainingText = text;
+
+            if (match.Success)
+            {
+                amount = int.Parse(match.Groups[1].Value);
+            }
+
+            return amount;
+        }
+
+        Material GetSuperChatMaterial(int amount)
+        {
+            foreach (SuperChatMaterial superChat in superChatMaterials)
+            {
+                if (amount >= superChat.min)
+                {
+                    return superChat.material;
+                }
+            }
+            return null;
         }
 
         public void RemoveFlowChatList(FlowComment comment)
@@ -92,7 +145,7 @@ namespace Zuaki
         {
             // 相対衝突時間を求める
             float relativeDistance = rightLocalX - (earlyComment.transform.localPosition.x + earlyComment.commentLength);
-            float relativeSpeed = lateComment.commentSpeed - earlyComment.commentSpeed;
+            float relativeSpeed = lateComment.commentSpeed * lateComment.fixedSpeedParam - earlyComment.commentSpeed * earlyComment.fixedSpeedParam;
             float relativeConflictTime = relativeDistance / relativeSpeed;
 
             if (relativeDistance <= 0) return true; // 既に衝突しているならtrueを返す
@@ -100,7 +153,7 @@ namespace Zuaki
 
             // 先に出現したコメントの消失までの時間を求める
             float earlyDistance = earlyComment.transform.localPosition.x + earlyComment.commentLength - rightLocalX;
-            float earlyEndTime = earlyDistance / earlyComment.commentSpeed;
+            float earlyEndTime = earlyDistance / (earlyComment.commentSpeed * earlyComment.fixedSpeedParam);
 
             //  コメントが消える前に衝突するならtrueを返す
             if (earlyEndTime <= relativeConflictTime) return true;
@@ -117,17 +170,24 @@ namespace Zuaki
         public Material GPT;
         public Material Other;
 
-        public Material GetMaterial(Commenter commenter)
+        public Material GetMaterial(SpeakerRole commenter)
         {
             return commenter switch
             {
-                Commenter.Programmer => Programmer,
-                Commenter.Illustrator => Illustrator,
-                Commenter.SoundCreator => SoundCreator,
-                Commenter.ScenarioWriter => ScenarioWriter,
-                Commenter.GPT => GPT,
+                SpeakerRole.Programmer => Programmer,
+                SpeakerRole.Illustrator => Illustrator,
+                SpeakerRole.SoundCreator => SoundCreator,
+                SpeakerRole.ScenarioWriter => ScenarioWriter,
+                SpeakerRole.GPT => GPT,
                 _ => Other,
             };
         }
+    }
+
+    [System.Serializable]
+    public class SuperChatMaterial
+    {
+        public Material material;
+        public int min = 0;
     }
 }

@@ -10,6 +10,9 @@ using OpenQA.Selenium;
 using System.Collections.ObjectModel;
 using System.Linq;
 using Unity.VisualScripting;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 namespace Zuaki
 {
@@ -177,9 +180,9 @@ namespace Zuaki
         public string Message { get; private set; } = null;
         public string Name { get; private set; } = null;
         public string Time { get; private set; } = null;
-        public Commenter Commenter = Commenter.Other;
+        public SpeakerRole Commenter = SpeakerRole.Other;
         public int SpeakerID => SpeakerData.GetSpeakerID(Commenter);
-        public ChatElement(string message = null, string name = null, string time = null, Commenter commenter = Commenter.Other)
+        public ChatElement(string message = null, string name = null, string time = null, SpeakerRole commenter = SpeakerRole.Other)
         {
             this.Message = message;
             this.Name = name;
@@ -194,13 +197,13 @@ namespace Zuaki
             this.Commenter = GetCommenter(style);
         }
 
-        Commenter GetCommenter(string style)
+        SpeakerRole GetCommenter(string style)
         {
-            if (style.Contains("color: rgb(241, 196, 15);")) return Commenter.Programmer;
-            if (style.Contains("color: rgb(46, 204, 113);")) return Commenter.Illustrator;
-            if (style.Contains("color: rgb(52, 152, 219);")) return Commenter.SoundCreator;
-            if (style.Contains("color: rgb(231, 76, 60);")) return Commenter.ScenarioWriter;
-            return Commenter.Other;
+            if (style.Contains("color: rgb(241, 196, 15);")) return SpeakerRole.Programmer;
+            if (style.Contains("color: rgb(46, 204, 113);")) return SpeakerRole.Illustrator;
+            if (style.Contains("color: rgb(52, 152, 219);")) return SpeakerRole.SoundCreator;
+            if (style.Contains("color: rgb(231, 76, 60);")) return SpeakerRole.ScenarioWriter;
+            return SpeakerRole.Other;
         }
         public bool IsEqual(ChatElement other)
         {
@@ -214,14 +217,4 @@ namespace Zuaki
             return false;
         }
     }
-    public enum Commenter
-    {
-        Programmer,
-        Illustrator,
-        SoundCreator,
-        ScenarioWriter,
-        GPT,
-        Other,
-    }
-
 }

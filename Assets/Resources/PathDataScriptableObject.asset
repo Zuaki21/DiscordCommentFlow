@@ -13,3 +13,18 @@ MonoBehaviour:
   m_Name: PathDataScriptableObject
   m_EditorClassIdentifier: 
   audioMixer: {fileID: 24100000, guid: c48e3f7b972c333469b24b63c203ba39, type: 2}
+  superChatMaterials:
+  - material: {fileID: 2100000, guid: 72f9df8eb16428341b728d7550f39631, type: 2}
+    min: 0
+  - material: {fileID: 2100000, guid: 496823a8b5bab8a46b18bb76de4d78cb, type: 2}
+    min: 200
+  - material: {fileID: 2100000, guid: d77af0c8784d3cd44921e1d4d2d12ce1, type: 2}
+    min: 500
+  - material: {fileID: 2100000, guid: 30942babc399beb49b7e98fcc2afcb7e, type: 2}
+    min: 1000
+  - material: {fileID: 2100000, guid: 68186ab4ce999e24ca953b30d4d01179, type: 2}
+    min: 2000
+  - material: {fileID: 2100000, guid: 0b062d3fe8d4f93488979f91dd84ea4c, type: 2}
+    min: 5000
+  - material: {fileID: 2100000, guid: 4ff5c2daa19584d46a65c3f83abb4859, type: 2}
+    min: 10000

@@ -10,12 +10,10 @@ namespace Zuaki
     {
         Rigidbody2D rb;
         TextMeshProUGUI textMesh;
-        float rightX = 650;
-        float leftX = -650;
-        float displayWidth = 1300;
+        float leftLocalX = -650;
         public float commentLength => textMesh.text.Length * textMesh.fontSize;
         public float commentSpeed => Settings.Instance.flowSpeed * (commentLength + 1300) / 1300;
-
+        public float fixedSpeedParam = 1;
         protected void Awake()
         {
             textMesh = GetComponent<TextMeshProUGUI>();
@@ -24,12 +22,12 @@ namespace Zuaki
         protected void Start()
         {
             textMesh.fontSize = Settings.Instance.fontSize;
-            rb.velocity = new Vector2(-commentSpeed, 0);
+            rb.velocity = new Vector2(-commentSpeed * fixedSpeedParam, 0);
         }
         protected void Update()
         {
             //画面外に出たら消す
-            if (transform.localPosition.x < leftX - commentLength)
+            if (transform.localPosition.x < leftLocalX - commentLength)
             {
                 //コメントリストから削除
                 ChatManager.Instance.RemoveFlowChatList(this);

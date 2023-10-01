@@ -18,7 +18,7 @@ namespace Zuaki
             SpeechOption option = new SpeechOption(speakerID, speechSpeed, pitch, intonationScale);
             return await PostVoiceVoxWebRequest(text, option);
         }
-        public static async UniTask<AudioClip> PostVoiceVoxWebRequest(string text, Commenter commenter, float? speechSpeed = null, float? pitch = null, float? intonationScale = null)
+        public static async UniTask<AudioClip> PostVoiceVoxWebRequest(string text, SpeakerRole commenter, float? speechSpeed = null, float? pitch = null, float? intonationScale = null)
         => await PostVoiceVoxWebRequest(text, SpeakerData.GetSpeakerID(commenter), speechSpeed, pitch, intonationScale);
 
         public static async UniTask<AudioClip> PostVoiceVoxWebRequest(ChatElement chatElement, float? speechSpeed = null, float? pitch = null, float? intonationScale = null)
@@ -57,7 +57,7 @@ namespace Zuaki
             }
             catch (UnityWebRequestException e) when (e.ResponseCode == 400)
             {
-                Debug.Log("読めない文字だけの可能性があります");
+                Debug.Log("読めない文字のみの可能性があります");
                 return null;
             }
 
@@ -123,10 +123,10 @@ namespace Zuaki
         /// <param name="intonationScale">抑揚(0-5)</param>
         public SpeechOption(int? speakerID = null, float? speechSpeed = null, float? pitch = null, float? intonationScale = null)
         {
-            this.speakerID = speakerID ?? SpeakerData.DefaultOption.defaultSpeakerID;
-            this.speechSpeed = speechSpeed ?? SpeakerData.DefaultOption.defaultSpeechSpeed;
-            this.pitch = pitch ?? SpeakerData.DefaultOption.defaultPitch;
-            this.intonationScale = intonationScale ?? SpeakerData.DefaultOption.defaultIntonationScale;
+            this.speakerID = speakerID ?? SpeakerData.GetSpeakerID(SpeakerRole.Other);
+            this.speechSpeed = speechSpeed ?? SpeakerData.DefaultOption.speed;
+            this.pitch = pitch ?? SpeakerData.DefaultOption.pitch;
+            this.intonationScale = intonationScale ?? SpeakerData.DefaultOption.intonationScale;
         }
     }
 }

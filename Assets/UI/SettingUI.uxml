@@ -1,0 +1,34 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI/SettingUI.uss?fileID=7433441132597879392&amp;guid=7b48e39b20dc93f4280f898eb14520b7&amp;type=3#SettingUI" />
+    <ui:VisualElement style="flex-grow: 1; background-color: rgba(255, 255, 255, 0.7); font-size: 30px;">
+        <ui:Label text="【設定ウィンドウ】" display-tooltip-when-elided="true" name="SettingText" style="font-size: 30px; -unity-font-style: bold; -unity-text-align: middle-center;" />
+        <ui:TextField picking-mode="Ignore" label="Text Field" value="filler text" text="filler text" />
+        <ui:VisualElement style="flex-grow: 1; flex-direction: flex-start; width: auto; -unity-font-definition: url(&apos;project://database/Assets/Fonts/Text/LINESeedJP_A_TTF_Rg%20SDF.asset?fileID=11400000&amp;guid=f1a3130a04ebb2e46bcdad94c8d0e303&amp;type=2#LINESeedJP_A_TTF_Rg SDF&apos;);">
+            <ui:GroupBox name="EssentialSettingGroup" style="background-color: rgba(255, 0, 0, 0.22);">
+                <ui:Label text="必須項目" display-tooltip-when-elided="true" name="EssentialSettingText" style="-unity-font-style: bold; color: rgb(255, 0, 0); -unity-text-outline-width: 0; -unity-text-outline-color: rgba(0, 0, 0, 0); margin-top: 0; margin-bottom: 0; padding-top: 0; padding-bottom: 0;" />
+                <ui:GroupBox name="URLGroup" style="background-color: rgba(255, 0, 10, 0); flex-direction: row;">
+                    <ui:TextField picking-mode="Ignore" label="DiscordOverFLowのURL" value="filler text" text="URL" name="URLField" style="-unity-text-align: middle-left; width: auto; flex-grow: 1;" />
+                    <ui:Button text="確定" display-tooltip-when-elided="true" name="Submit" />
+                </ui:GroupBox>
+                <ui:Label text="対象のチャットを取得出来ませんでした" display-tooltip-when-elided="true" name="ChatName" style="-unity-text-align: upper-right; padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0;" />
+            </ui:GroupBox>
+            <ui:Toggle label="AI(ChatGPT)でコメントを増やす" style="align-items: stretch; justify-content: flex-start; -unity-text-align: upper-left; flex-direction: row;" />
+            <ui:GroupBox style="flex-direction: row;">
+                <ui:TextField picking-mode="Ignore" label="ChatGPTのAPIキー" value="filler text" text="APIキー" style="flex-grow: 1;" />
+                <ui:Button text="確定" display-tooltip-when-elided="true" />
+            </ui:GroupBox>
+            <ui:Toggle label="VOICEVOXでコメントを読み上げる" />
+            <ui:Toggle label="LocalのVOICEVOXを使う" style="height: 65px;" />
+            <ui:Toggle label="名前を読み上げる" />
+            <ui:Toggle label="AIコメントを読み上げる" style="height: 63px;" />
+            <ui:GroupBox>
+                <ui:Label text="読み上げ音声の設定" display-tooltip-when-elided="true" style="padding-bottom: 0; margin-bottom: 0;" />
+                <ui:DropdownField label="Illustrator" index="-1" name="IllustratorVoice" />
+                <ui:DropdownField label="SoundCreator読み上げ音声" index="-1" name="SoundCreatorVoice" />
+                <ui:DropdownField label="AIコメント読み上げ音声" index="-1" name="GPTVoice" />
+                <ui:DropdownField label="その他コメント読み上げ音声" index="-1" name="OtherVoice" />
+                <ui:DropdownField label="Programmerコメント読み上げ音声" index="-1" name="ProgrammerVoice" />
+            </ui:GroupBox>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

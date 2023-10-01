@@ -13,13 +13,31 @@ MonoBehaviour:
   m_Name: SpeakerData
   m_EditorClassIdentifier: 
   roleVoice:
-    Programmer: 1
-    Illustrator: 8
-    SoundCreator: 44
-    ScenarioWriter: 0
-    GPT: 10
+    Programmer:
+      name: "\u305A\u3093\u3060\u3082\u3093(\u30CE\u30FC\u30DE\u30EB)"
+      characterNum: 1
+      styleNum: 0
+    Illustrator:
+      name: "\u56DB\u56FD\u3081\u305F\u3093(\u30CE\u30FC\u30DE\u30EB)"
+      characterNum: 0
+      styleNum: 0
+    SoundCreator:
+      name: "\u6625\u65E5\u90E8\u3064\u3080\u304E(\u30CE\u30FC\u30DE\u30EB)"
+      characterNum: 2
+      styleNum: 0
+    ScenarioWriter:
+      name: "WhiteCUL(\u305F\u306E\u3057\u3044)"
+      characterNum: 12
+      styleNum: 1
+    GPT:
+      name: "\u5C0F\u591C/SAYO(\u30CE\u30FC\u30DE\u30EB)"
+      characterNum: 17
+      styleNum: 0
+    Other:
+      name: "\u5C0F\u591C/SAYO(\u30CE\u30FC\u30DE\u30EB)"
+      characterNum: 17
+      styleNum: 0
   defaultOption:
-    defaultSpeakerID: 16
-    defaultSpeechSpeed: 1.5
-    defaultPitch: 0
-    defaultIntonationScale: 1
+    speed: 1
+    pitch: 0
+    intonationScale: 1

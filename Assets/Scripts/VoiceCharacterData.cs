@@ -1,3 +1,4 @@
+using AnnulusGames.LucidTools.Editor;
 using AnnulusGames.LucidTools.Inspector;
 using System.Collections;
 using System.Collections.Generic;
@@ -11,11 +12,12 @@ namespace Zuaki
     public class VoiceCharacterData : SingletonScriptableObject<VoiceCharacterData>
     {
         public static VoiceCharacter[] VoiceCharacters => Instance.voiceCharacters;
-        [SerializeField] VoiceCharacter[] voiceCharacters;
+
+        [SerializeField, HideInInspector] VoiceCharacter[] voiceCharacters;
         [SerializeField] Object jsonObject;
 
 #if UNITY_EDITOR
-        [ContextMenu("Load"), Button("Load")]
+        [ContextMenu("Load"), Button("LoadJson")]
         void LoadData()
         {
             //jsonObjectのパスを取得
@@ -32,7 +34,7 @@ namespace Zuaki
             UnityEditor.AssetDatabase.SaveAssets();
         }
 
-        [ContextMenu("Delete"), Button("Delete")]
+        [ContextMenu("Delete"), Button("DeleteData")]
         void DeleteData()
         {
             voiceCharacters = null;
@@ -41,24 +43,25 @@ namespace Zuaki
             UnityEditor.AssetDatabase.SaveAssets();
 
         }
+        [System.Serializable]
+        public class VoiceCharacterArray
+        {
+            public VoiceCharacter[] voiceCharacters;
+        }
 #endif
     }
-
-    [System.Serializable]
-    public class VoiceCharacterArray
-    {
-        public VoiceCharacter[] voiceCharacters;
-    }
+    ///////////////////////////////
+    /// 以下、jsonのデータ構造
     [System.Serializable]
     public class VoiceCharacter
     {
-        public string name;
+        [HideInInspector] public string name;
         public Style[] styles;
     }
     [System.Serializable]
     public class Style
     {
-        public string name;
-        public int id;
+        [HideInInspector] public string name;
+        [ReadOnly] public int id;
     }
 }

@@ -13,7 +13,6 @@ namespace Zuaki
 {
     public class Settings : SingletonMonoBehaviour<Settings>
     {
-        static bool FirstTime = true;
         [SerializeField] public float flowSpeed = 1.0f;
         [SerializeField, Range(20, 60)] public int fontSize = 40;
         [SerializeField, Range(0, 100)] public float topMargin = 0;
@@ -21,9 +20,11 @@ namespace Zuaki
         [SerializeField] TMP_InputField urlInputField;
         public bool useGPT = true;
         public bool useVoiceVox = true;
-        public bool useVoiceOnGPT = false;
+        public bool useVoiceVoxOnGPT = false;
         public bool useTestChat = false;
+        public bool useLocalVoiceVox = false;
         public bool useNameOnVoice = false;
+        public bool useVoiceRecognize = false;
         public string GPT_WebAPI = "インスペクターから設定してください";
         public string VOICEVOX_WebAPI = "インスペクターから設定してください";
         public string url = "https://www.google.com/";

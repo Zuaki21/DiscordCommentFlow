@@ -11,3 +11,4 @@ public class PathDataScriptableObject : SingletonScriptableObject<PathDataScript
     public static AudioMixer AudioMixer => Instance.audioMixer;
     [SerializeField] private AudioMixer audioMixer;
 }
+

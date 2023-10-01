@@ -25,3 +25,6 @@ DropdownField > VisualElement > ScrollView {
     background-color: pink;
     mouse-wheel-scroll-size: 500;
 }
+#ReadCharacterGroup > GroupBox > Button {
+    width: 15%;
+}

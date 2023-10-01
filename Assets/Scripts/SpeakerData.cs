@@ -94,7 +94,25 @@ namespace Zuaki
                 if (styleNum < 0 || styleNum >= VoiceCharacterData.VoiceCharacters[characterNum].styles.Length) return 0;
                 return VoiceCharacterData.VoiceCharacters[characterNum].styles[styleNum].id;
             }
+            set
+            {
+                for (int i = 0; i < VoiceCharacterData.VoiceCharacters.Length; i++)
+                {
+                    for (int j = 0; j < VoiceCharacterData.VoiceCharacters[i].styles.Length; j++)
+                    {
+                        if (VoiceCharacterData.VoiceCharacters[i].styles[j].id == value)
+                        {
+                            characterNum = i;
+                            styleNum = j;
+                            return;
+                        }
+                    }
+                }
+                characterNum = 0;
+                styleNum = 0;
+            }
         }
+
 #if UNITY_EDITOR
         public void Setting()
         {

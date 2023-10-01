@@ -575,16 +575,15 @@ MonoBehaviour:
   flowSpeed: 2
   fontSize: 50
   topMargin: 5
-  SettingPanel: {fileID: 93570134}
+  SettingPanel: {fileID: 1717692772}
   urlInputField: {fileID: 1317309203}
   useGPT: 1
   useVoiceVox: 1
   useVoiceVoxOnGPT: 1
-  useTestChat: 0
+  useTestChat: 1
   useLocalVoiceVox: 0
   useNameOnVoice: 1
   useVoiceRecognize: 0
-  GPT_WebAPI: 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
   VOICEVOX_WebAPI: B2u418S27023734
   url: https://streamkit.discord.com/overlay/chat/896763384253534229/1157983703071469639?icon=true&online=true&logo=white&text_color=%23ffffff&text_size=14&text_outline_color=%23000000&text_outline_size=0&text_shadow_color=%23000000&text_shadow_size=0&bg_color=%231e2124&bg_opacity=0.95&bg_shadow_color=%23000000&bg_shadow_size=0&invite_code=EQHXCarcMS&limit_speaking=false&small_avatars=false&hide_names=false&fade_chat=0
 --- !u!114 &530527974
@@ -2781,7 +2780,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1717692772}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0

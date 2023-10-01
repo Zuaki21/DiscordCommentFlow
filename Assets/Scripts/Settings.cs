@@ -5,6 +5,8 @@ using UnityEngine;
 using Zuaki;
 using TMPro;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
+
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -25,7 +27,28 @@ namespace Zuaki
         public bool useLocalVoiceVox = false;
         public bool useNameOnVoice = false;
         public bool useVoiceRecognize = false;
-        public string GPT_WebAPI = "インスペクターから設定してください";
+        class TextObject { public string text; public TextObject(string text) { this.text = text; } }
+        public string GPT_WebAPI
+        {
+            get
+            {
+                if (_GPT_WebAPI == "")
+                {
+                    TextObject textObject = new TextObject("");
+                    SaveMethods.Load(textObject, "GPT_WebAPI");
+                    _GPT_WebAPI = textObject.text;
+                }
+                return _GPT_WebAPI;
+            }
+            set
+            {
+                Debug.Log("GPT_WebAPIを設定しました");
+                TextObject textObject = new TextObject(value);
+                SaveMethods.Save(textObject, "GPT_WebAPI");
+                _GPT_WebAPI = value;
+            }
+        }
+        private string _GPT_WebAPI = "";
         public string VOICEVOX_WebAPI = "インスペクターから設定してください";
         public string url = "https://www.google.com/";
         protected void Start()
@@ -41,8 +64,6 @@ namespace Zuaki
                 if (SettingPanel.activeSelf)
                 {
                     SettingPanel.SetActive(false);
-
-                    ScrapingSelenium.Instance.ChangeURL(urlInputField.text);
                 }
                 else
                 {

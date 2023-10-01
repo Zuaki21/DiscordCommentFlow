@@ -88,7 +88,7 @@ namespace Zuaki
             ChatManager.AddChatElement(chatElements);
 
             // GPTを使う設定の場合はコメントを生成して追加
-            if (Settings.Instance.useGPT)
+            if (Settings.Instance.useGPT && Settings.Instance.GPT_WebAPI != "")
             {
                 ChatElement[] generatedComments = await CommentGenerator.GetComments(chatElements);
                 ChatManager.AddChatElement(generatedComments);

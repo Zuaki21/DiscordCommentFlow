@@ -74,7 +74,6 @@ namespace Zuaki
             string path = Path.Combine(Application.persistentDataPath, dataName + ".bin");
             File.WriteAllBytes(path, arrEncrypted);
         }
-
         //読み込み
         public static void Load(object obj, string dataName)
         {

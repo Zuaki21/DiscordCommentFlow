@@ -1,36 +1,41 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
     <Style src="project://database/Assets/UI/SettingUI.uss?fileID=7433441132597879392&amp;guid=7b48e39b20dc93f4280f898eb14520b7&amp;type=3#SettingUI" />
-    <ui:VisualElement style="flex-grow: 1; background-color: rgba(255, 255, 255, 0.7); font-size: 25px;">
-        <ui:Label text="【設定ウィンドウ】" display-tooltip-when-elided="true" name="SettingText" style="font-size: 35px; -unity-font-style: bold; -unity-text-align: middle-center;" />
+    <Style src="project://database/Assets/UI/DropdownStyle.uss?fileID=7433441132597879392&amp;guid=043b98f963909834584a108e753a39cd&amp;type=3#DropdownStyle" />
+    <ui:VisualElement style="flex-grow: 1; background-color: rgb(233, 233, 233); font-size: 25px;">
+        <ui:Label text="【設定ウィンドウ】" display-tooltip-when-elided="true" name="SettingText" style="font-size: 35px; -unity-font-style: bold; -unity-text-align: middle-center; background-color: rgba(255, 255, 255, 0.71); color: rgb(0, 0, 0);" />
         <ui:ScrollView name="ScrollView" mouse-wheel-scroll-size="500" style="-unity-font-definition: url(&apos;project://database/Assets/Fonts/Text/LINESeedJP_A_TTF_Rg%20SDF.asset?fileID=11400000&amp;guid=f1a3130a04ebb2e46bcdad94c8d0e303&amp;type=2#LINESeedJP_A_TTF_Rg SDF&apos;); flex-grow: 1;">
             <ui:GroupBox name="EssentialSettingGroup" style="background-color: rgba(255, 0, 0, 0.22);">
                 <ui:Label text="必須項目" display-tooltip-when-elided="true" name="EssentialSettingText" style="-unity-font-style: bold; color: rgb(255, 0, 0); -unity-text-outline-width: 0; -unity-text-outline-color: rgba(0, 0, 0, 0); margin-top: 0; margin-bottom: 0; padding-top: 0; padding-bottom: 0;" />
                 <ui:GroupBox name="URLGroup" style="background-color: rgba(255, 0, 10, 0); flex-direction: row;">
-                    <ui:TextField picking-mode="Ignore" label="DiscordOverFLowのURL" value="filler textfiller" text="URL" name="URLField" style="flex-grow: 0; width: 1150px;" />
+                    <ui:TextField picking-mode="Ignore" label="DiscordOverFLowのURL" value="filler textfiller" text="URL" name="URLField" style="flex-grow: 0; width: 1145px;" />
                     <ui:Button text="確定" display-tooltip-when-elided="true" name="URLSubmit" />
                 </ui:GroupBox>
-                <ui:Label text="対象のチャットを取得出来ませんでした" display-tooltip-when-elided="true" name="ChannelName" style="-unity-text-align: upper-right; padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0; flex-grow: 1;" />
             </ui:GroupBox>
             <ui:Toggle label="AI(ChatGPT)でコメントを増やす" name="UseAIToggle" style="align-items: stretch; justify-content: flex-start; -unity-text-align: upper-left; flex-direction: row;" />
             <ui:GroupBox name="GPTAPIGroup" style="flex-direction: row;">
-                <ui:TextField picking-mode="Ignore" label="ChatGPTのAPIキー" value="filler text" text="APIキー" name="ChatGPTAPIField" style="flex-grow: 0; width: 1160px;" />
+                <ui:TextField picking-mode="Ignore" label="ChatGPTのAPIキー" value="APIキーを入力してね" text="APIキー" name="ChatGPTAPIField" style="flex-grow: 0; width: 1155px;" />
                 <ui:Button text="確定" display-tooltip-when-elided="true" name="ChatGPTAPISubmit" />
             </ui:GroupBox>
             <ui:Toggle label="VOICEVOXでコメントを読み上げる" name="UseVoiceVoxToggle" />
-            <ui:RadioButtonGroup label="VOICEVOXの種類&lt;size=20&gt;(ローカルはVOICEVOXアプリ起動が必要です)" value="-1" name="VoiceVoxTypeGroup" style="flex-grow: 1; flex-wrap: nowrap;">
+            <ui:RadioButtonGroup label="VOICEVOXの種類&lt;size=20&gt;(ローカルはVOICEVOXアプリ起動が必要です)" value="-1" name="VoiceVoxTypeGroup" style="flex-grow: 0; flex-wrap: nowrap;">
                 <ui:RadioButton label="ローカル" name="LocalVoiceVox" style="background-color: rgba(0, 0, 0, 0.12);" />
                 <ui:RadioButton label="Web版" name="WebVoiceVox" style="background-color: rgba(0, 0, 0, 0.12);" />
             </ui:RadioButtonGroup>
             <ui:Toggle label="コメントユーザーを読み上げる" name="ReadName" />
             <ui:Toggle label="AIコメントを読み上げる" name="ReadAIComments" style="height: 63px;" />
-            <ui:Foldout text="読み上げ音声の設定" name="ReadCharacterFoldout" value="true">
-                <ui:DropdownField label="Programmer" index="-1" name="ProgrammerVoice" usage-hints="None" />
-                <ui:DropdownField label="Illustrator" index="-1" name="IllustratorVoice" />
-                <ui:DropdownField label="SoundCreator" index="-1" name="SoundCreatorVoice" />
-                <ui:DropdownField label="AIコメント" index="-1" name="GPTVoice" />
-                <ui:DropdownField label="その他コメント" index="-1" name="OtherVoice" />
-                <ui:Label tabindex="-1" text="Label" parse-escape-sequences="true" display-tooltip-when-elided="true" style="height: 989px;" />
-            </ui:Foldout>
+            <ui:VisualElement name="ReadCharacterGroup" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0.08);">
+                <ui:Label tabindex="-1" text="ロールごとのボイス設定" parse-escape-sequences="true" display-tooltip-when-elided="true" style="-unity-text-align: upper-center; margin-bottom: 0; padding-bottom: 0;" />
+                <ui:GroupBox style="flex-direction: row; margin-bottom: 0; padding-bottom: 0; margin-top: 0; padding-top: 0;">
+                    <ui:Button text="Programmer&#10;&lt;size=15&gt;ずんだもん/ノーマル" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ProgrammerVoice" style="flex-grow: 1; text-overflow: ellipsis;" />
+                    <ui:Button text="Illustrator" parse-escape-sequences="true" display-tooltip-when-elided="true" name="IllustratorVoice" style="flex-grow: 1; text-overflow: ellipsis;" />
+                    <ui:Button text="SoundCreator" parse-escape-sequences="true" display-tooltip-when-elided="true" name="SoundCreatorVoice" style="flex-grow: 1; text-overflow: ellipsis;" />
+                </ui:GroupBox>
+                <ui:GroupBox name="GroupBox" style="flex-direction: row; margin-top: 0;">
+                    <ui:Button text="ScenarioWriter" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ScenarioWriterVoice" style="flex-grow: 1; text-overflow: ellipsis;" />
+                    <ui:Button text="ChatGPT" parse-escape-sequences="true" display-tooltip-when-elided="true" name="GPTVoice" style="flex-grow: 1; text-overflow: ellipsis;" />
+                    <ui:Button text="Other" parse-escape-sequences="true" display-tooltip-when-elided="true" name="OtherVoice" style="flex-grow: 1; text-overflow: ellipsis;" />
+                </ui:GroupBox>
+            </ui:VisualElement>
         </ui:ScrollView>
     </ui:VisualElement>
 </ui:UXML>

@@ -6,14 +6,15 @@ using UnityEngine;
 using UnityEngine.UIElements;
 using Zuaki;
 using System.Linq;
+using Fab.UITKDropdown;
+using UnityEditor.U2D.Animation;
 
 namespace Zuaki
 {
     public class SettingOperator : SingletonMonoBehaviour<SettingOperator>
     {
         UIDocument uiDocument;
-        Label channelName;
-        protected void Start()
+        protected void OnEnable()
         {
             uiDocument = GetComponent<UIDocument>();
             VisualElement root = uiDocument.rootVisualElement;
@@ -36,6 +37,14 @@ namespace Zuaki
             Button chatGPTAPISubmit = root.Q<Button>(name: "ChatGPTAPISubmit");
             GroupBox GPTAPIGroup = root.Q<GroupBox>("GPTAPIGroup");
             Toggle useAiToggle = root.Q<Toggle>("UseAIToggle");
+            if (Settings.Instance.GPT_WebAPI == "")
+            {
+                chatGPTAPIField.value = "APIキーを入力してください";
+            }
+            else
+            {
+                chatGPTAPIField.value = Settings.Instance.GPT_WebAPI;
+            }
             useAiToggle.value = Settings.Instance.useGPT;
             GPTAPIGroup.SetEnabled(Settings.Instance.useGPT);
             useAiToggle.RegisterCallback<ChangeEvent<bool>>((evt) =>
@@ -49,9 +58,6 @@ namespace Zuaki
                 Settings.Instance.GPT_WebAPI = chatGPTAPIField.value;
             });
 
-            channelName = root.Q<Label>("ChannelName");
-
-
             // VoiceVox設定
             Toggle useVoiceVoxToggle = root.Q<Toggle>("UseVoiceVoxToggle");
             Toggle readNameToggle = root.Q<Toggle>("ReadName");
@@ -61,20 +67,20 @@ namespace Zuaki
             localVoiceVox.value = Settings.Instance.useLocalVoiceVox;
             webVoiceVox.value = !Settings.Instance.useLocalVoiceVox;
 
-            Foldout readCharacterFoldout = root.Q<Foldout>("ReadCharacterFoldout");
+            VisualElement readCharacterGroup = root.Q<VisualElement>("ReadCharacterGroup");
 
 
             useVoiceVoxToggle.value = Settings.Instance.useVoiceVox;
             VoiceVoxTypeGroup.SetEnabled(Settings.Instance.useVoiceVox);
             readNameToggle.SetEnabled(Settings.Instance.useVoiceVox);
-            readCharacterFoldout.SetEnabled(Settings.Instance.useVoiceVox);
+            readCharacterGroup.SetEnabled(Settings.Instance.useVoiceVox);
             useVoiceVoxToggle.RegisterCallback<ChangeEvent<bool>>((evt) =>
             {
                 Settings.Instance.useVoiceVox = evt.newValue;
                 VoiceVoxTypeGroup.SetEnabled(evt.newValue);
                 readNameToggle.SetEnabled(evt.newValue);
                 readAICommentsToggle.SetEnabled(evt.newValue && Settings.Instance.useGPT);
-                readCharacterFoldout.SetEnabled(evt.newValue);
+                readCharacterGroup.SetEnabled(evt.newValue);
             });
 
             readAICommentsToggle.SetEnabled(Settings.Instance.useVoiceVox && Settings.Instance.useGPT);
@@ -84,22 +90,32 @@ namespace Zuaki
             });
 
             //読み上げキャラクター設定
-            DropdownField programmerVoice = root.Q<DropdownField>("ProgrammerVoice");
-            DropdownField illustratorVoice = root.Q<DropdownField>("IllustratorVoice");
-            DropdownField soundCreatorVoice = root.Q<DropdownField>("SoundCreatorVoice");
-            DropdownField GPTVoice = root.Q<DropdownField>("GPTVoice");
-            DropdownField otherVoice = root.Q<DropdownField>("OtherVoice");
-            // 選択肢を動的に生成
-            List<string> voiceNameStyles = VoiceCharacterData.AllCharacterStyles.ToList();
-            programmerVoice.choices = voiceNameStyles;
-            illustratorVoice.choices = voiceNameStyles;
-            soundCreatorVoice.choices = voiceNameStyles;
-            GPTVoice.choices = voiceNameStyles;
-            otherVoice.choices = voiceNameStyles;
-
+            foreach (SpeakerRole role in System.Enum.GetValues(typeof(SpeakerRole)))
+            {
+                MakeMenu(role, root);
+            }
         }
 
-        public static void SetChannelName(string name)
-        => Instance.channelName.text = name;
+        void MakeMenu(SpeakerRole role, VisualElement root)
+        {
+            Dropdown dropdown = new Dropdown(root);
+            DropdownMenu characterMenu = new DropdownMenu();
+            Button btn = root.Q<Button>(name: role.ToString() + "Voice");
+            btn.clickable.clicked += () => dropdown.Open(characterMenu, btn.worldBound);
+
+            foreach (var characterStyle in VoiceCharacterData.AllCharacterStyles)
+                characterMenu.AppendAction(characterStyle, (DropdownMenuAction action)
+                => SetVoice(action, role, btn));
+            btn.text = role.ToString() + "\n<size=20>" + VoiceCharacterData.AllCharacterStyles[SpeakerData.GetRoleSetting(role).speakerID];
+        }
+
+        private void SetVoice(DropdownMenuAction action, SpeakerRole role, Button button)
+        {
+            string[] characterStyle = action.name.Split('/');
+            VoiceCharacter character = VoiceCharacterData.VoiceCharacters.First(x => x.name == characterStyle[0]);
+            Style style = character.styles.First(x => x.name == characterStyle[1]);
+            SpeakerData.GetRoleSetting(role).speakerID = style.id;
+            button.text = role.ToString() + "\n<size=20>" + action.name;
+        }
     }
 }

@@ -1,0 +1,27 @@
+Toggle > VisualElement > #unity-checkmark {
+    -unity-background-scale-mode: scale-to-fit;
+    width: 30px;
+    height: 30px;
+    margin-left: 0px;
+}
+Toggle > VisualElement {
+    flex-direction: row-reverse;
+}
+
+Foldout > Toggle > VisualElement {
+    flex-direction: row;
+}
+TextField > VisualElement {
+    margin-left: auto;
+    flex-grow: 0;
+    width: 100px;
+    flex-direction: row-reverse;
+}
+#unity-radio-button-group__container{
+    margin-left: auto;
+    flex-direction: row;
+}
+DropdownField > VisualElement > ScrollView {
+    background-color: pink;
+    mouse-wheel-scroll-size: 500;
+}

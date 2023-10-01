@@ -38,6 +38,6 @@ MonoBehaviour:
       characterNum: 17
       styleNum: 0
   defaultOption:
-    speed: 1
+    speed: 1.25
     pitch: 0
     intonationScale: 1

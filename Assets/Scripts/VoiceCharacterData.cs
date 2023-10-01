@@ -11,6 +11,22 @@ namespace Zuaki
     [CreateAssetMenu(fileName = "VoiceCharacterData", menuName = "Zuaki/VoiceCharacterData", order = 100)]
     public class VoiceCharacterData : SingletonScriptableObject<VoiceCharacterData>
     {
+        // "Name/Style"の形式で取得
+        public static string[] AllCharacterStyles
+        {
+            get
+            {
+                List<string> AllCharacterStyles = new List<string>();
+                foreach (var voiceCharacter in Instance.voiceCharacters)
+                {
+                    foreach (var style in voiceCharacter.styles)
+                    {
+                        AllCharacterStyles.Add($"{voiceCharacter.name}/{style.name}");
+                    }
+                }
+                return AllCharacterStyles.ToArray();
+            }
+        }
         public static VoiceCharacter[] VoiceCharacters => Instance.voiceCharacters;
 
         [SerializeField, HideInInspector] VoiceCharacter[] voiceCharacters;

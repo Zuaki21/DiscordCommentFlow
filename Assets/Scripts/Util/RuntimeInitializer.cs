@@ -8,6 +8,7 @@ public static class RuntimeInitializer
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     public static void Init()
     {
+        VoiceVoxWebManager.APIkeyIndex = 0;
         // シーン遷移時に破棄されないオブジェクトを生成する
         CreateDontDestroyObject<SoundManager>();
         CreateDontDestroyObject<VoiceSpeaker>();

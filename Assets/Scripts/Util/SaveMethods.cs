@@ -232,5 +232,13 @@ namespace Zuaki
                     break;
             }
         }
+        public static void DeleteAll()
+        {
+            foreach (string dataName in allDataName)
+            {
+                Delete(dataName);
+            }
+        }
+        static string[] allDataName = { "GPT_WebAPI", "url" };
     }
 }

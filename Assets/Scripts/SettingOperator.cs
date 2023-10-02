@@ -7,7 +7,6 @@ using UnityEngine.UIElements;
 using Zuaki;
 using System.Linq;
 using Fab.UITKDropdown;
-using UnityEditor.U2D.Animation;
 using System.Threading;
 
 namespace Zuaki
@@ -17,6 +16,8 @@ namespace Zuaki
         SynchronizationContext context;
         UIDocument uiDocument;
         Label loadingChannelLabel;
+        [SerializeField] GameObject LogPanel;
+        bool detailSetting = false;
         string loadingChannelText = "ページ読込中です...";
 
         protected void OnEnable()
@@ -29,7 +30,14 @@ namespace Zuaki
             // URL設定
             TextField urlField = root.Q<TextField>("URLField");
             Button URLSubmit = root.Q<Button>("URLSubmit");
-            urlField.value = Settings.Instance.url;
+            if (Settings.Instance.url == "")
+            {
+                urlField.value = "URLを入力してください";
+            }
+            else
+            {
+                urlField.value = Settings.Instance.url;
+            }
             URLSubmit.SetEnabled(false);
             URLSubmit.RegisterCallback<ClickEvent>((evt) =>
             {
@@ -85,21 +93,16 @@ namespace Zuaki
             readNameToggle.value = Settings.Instance.useNameOnVoice;
             localVoiceVox.value = Settings.Instance.useLocalVoiceVox;
             webVoiceVox.value = !Settings.Instance.useLocalVoiceVox;
-
+            VisualElement readGroup = root.Q<VisualElement>("ReadGroup");
             VisualElement readCharacterGroup = root.Q<VisualElement>("ReadCharacterGroup");
 
 
             useVoiceVoxToggle.value = Settings.Instance.useVoiceVox;
-            VoiceVoxTypeGroup.SetEnabled(Settings.Instance.useVoiceVox);
-            readNameToggle.SetEnabled(Settings.Instance.useVoiceVox);
-            readCharacterGroup.SetEnabled(Settings.Instance.useVoiceVox);
+            readGroup.SetEnabled(Settings.Instance.useVoiceVox);
             useVoiceVoxToggle.RegisterCallback<ChangeEvent<bool>>((evt) =>
             {
-                Settings.Instance.useVoiceVox = evt.newValue;
-                VoiceVoxTypeGroup.SetEnabled(evt.newValue);
-                readNameToggle.SetEnabled(evt.newValue);
+                readGroup.SetEnabled(evt.newValue);
                 readAICommentsToggle.SetEnabled(evt.newValue && Settings.Instance.useGPT);
-                readCharacterGroup.SetEnabled(evt.newValue);
             });
             readNameToggle.RegisterCallback<ChangeEvent<bool>>((evt) =>
             {
@@ -119,7 +122,32 @@ namespace Zuaki
 
             //LoadingChannelText
             loadingChannelLabel = root.Q<Label>("LoadingChannelText");
-            loadingChannelLabel.text = loadingChannelText;
+            loadingChannelLabel.text = "状態：" + loadingChannelText;
+
+            Button consoleLogButton = root.Q<Button>("ConsoleLogButton");
+            consoleLogButton.RegisterCallback<ClickEvent>((evt) =>
+            {
+                LogPanel.SetActive(true);
+            });
+
+            Button closeButton = root.Q<Button>("CloseButton");
+            closeButton.RegisterCallback<ClickEvent>((evt) =>
+            {
+                gameObject.SetActive(false);
+            });
+
+            Foldout detailSettingFoldout = root.Q<Foldout>("DetailSettingFoldout");
+            detailSettingFoldout.value = detailSetting;
+            detailSettingFoldout.RegisterCallback<ChangeEvent<bool>>((evt) =>
+            {
+                detailSetting = evt.newValue;
+            });
+
+            Button resetButton = root.Q<Button>("ResetButton");
+            resetButton.RegisterCallback<ClickEvent>((evt) =>
+            {
+                Reset();
+            });
         }
 
         void MakeMenu(SpeakerRole role, VisualElement root)
@@ -157,17 +185,47 @@ namespace Zuaki
         {
             Instance.context.Post(_ =>
             {
+                if (Instance.gameObject.activeSelf == false) return;
                 Instance.uiDocument.rootVisualElement.Q<RadioButtonGroup>("VoiceVoxTypeGroup").value = Settings.Instance.useLocalVoiceVox ? 0 : 1;
             }, null);
         }
+        public static void SetUseGPT()
+        {
+            Instance.context.Post(_ =>
+            {
+                if (Instance.gameObject.activeSelf == false) return;
+                Instance.uiDocument.rootVisualElement.Q<Toggle>("UseAIToggle").value = Settings.Instance.useGPT;
+            }, null);
+        }
+
+        public static void SetUseVoiceVox()
+        {
+            Instance.context.Post(_ =>
+            {
+                if (Instance.gameObject.activeSelf == false) return;
+                Instance.uiDocument.rootVisualElement.Q<Toggle>("UseVoiceVoxToggle").value = Settings.Instance.useVoiceVox;
+            }, null);
+        }
+
+
         // チャンネルの読み込み中のテキストを表示する
         public static void SetChannelText(string text)
         {
             Instance.context.Post(_ =>
             {
+                if (Instance.gameObject.activeSelf == false) return;
                 Instance.loadingChannelText = text;
-                Instance.loadingChannelLabel.text = text;
+                Instance.loadingChannelLabel.text = "状態：" + text;
             }, null);
+        }
+
+        public static void Reset()
+        {
+            // 設定をリセット
+            SaveMethods.DeleteAll();
+            // アプリを再起動する
+            System.Diagnostics.Process.Start(Application.dataPath.Replace("_Data", ".exe"));
+            Application.Quit();
         }
     }
 }

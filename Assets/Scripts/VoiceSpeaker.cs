@@ -38,7 +38,7 @@ namespace Zuaki
                 }
                 catch (System.Exception e) when (e.Message == "Cannot connect to destination host")
                 {
-                    Debug.Log("VoiceVoxサーバーに接続できませんでした。Web版VOICEVOXを使います。");
+                    Debug.LogWarning("LocalのVoiceVoxサーバーに接続できませんでした。Web版VOICEVOXを使います。");
                     Settings.Instance.useLocalVoiceVox = false;
                     SettingOperator.SetVoiceVoxType();
                     return await GetChatClip(chatElement);
@@ -109,12 +109,11 @@ namespace Zuaki
                 if (message == "") continue;
                 ChatElement fixedChatElement = new ChatElement(message, commenter: newChatElement.Commenter);
 
-                Debug.Log($"コメントを追加しました: {fixedChatElement.Message}");
                 //コメントの文字総数が上限を超える場合は読み上げない
                 //コメント数が多すぎる場合の対処
                 if (fixedChatElement.Message.Length + CountCommentLetters() > Settings.Instance.maxAllCommentLength)
                 {
-                    Debug.Log("コメント数が多すぎるため読みとばします");
+                    Debug.Log($"コメント数が多すぎるため読みとばします:{fixedChatElement.Message}");
                     continue;
                 }
 

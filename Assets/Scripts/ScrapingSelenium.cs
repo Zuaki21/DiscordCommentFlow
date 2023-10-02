@@ -22,39 +22,37 @@ namespace Zuaki
         public bool isHeadless = true;
         [SerializeField] GameObject LoadingCommentObj;
 
-        async void Start()
+        void Start()
         {
             LoadingCommentObj.SetActive(true);
-            await Task.Run(() =>
+
+            var driverPath = Application.streamingAssetsPath;
+            // 現在のプロセスの環境変数を取得
+            string currentPath = Environment.GetEnvironmentVariable("PATH", EnvironmentVariableTarget.Process);
+
+            // 新しいディレクトリを追加
+            string updatedPath = currentPath + ";" + driverPath;
+            // 更新した環境変数をプロセスに適用
+            Environment.SetEnvironmentVariable("PATH", updatedPath, EnvironmentVariableTarget.Process);
+
+            // ChromeOptionsを設定してヘッドレスモードを有効にする
+            ChromeOptions options = new ChromeOptions();
+
+            if (isHeadless)
             {
-                var driverPath = Application.streamingAssetsPath;
-                // 現在のプロセスの環境変数を取得
-                string currentPath = Environment.GetEnvironmentVariable("PATH", EnvironmentVariableTarget.Process);
+                // ヘッドレスモードを有効にする
+                options.AddArgument("--headless");
+            }
 
-                // 新しいディレクトリを追加
-                string updatedPath = currentPath + ";" + driverPath;
-                // 更新した環境変数をプロセスに適用
-                Environment.SetEnvironmentVariable("PATH", updatedPath, EnvironmentVariableTarget.Process);
+            ChromeDriverService driverService = ChromeDriverService.CreateDefaultService();
+            driverService.HideCommandPromptWindow = true;
+            // NOTE: 起動にはそこそこ時間がかかる
+            driver = new ChromeDriver(driverService, options);
 
-                // ChromeOptionsを設定してヘッドレスモードを有効にする
-                ChromeOptions options = new ChromeOptions();
-
-                if (isHeadless)
-                {
-                    // ヘッドレスモードを有効にする
-                    options.AddArgument("--headless");
-                }
-
-                ChromeDriverService driverService = ChromeDriverService.CreateDefaultService();
-                driverService.HideCommandPromptWindow = true;
-                // NOTE: 起動にはそこそこ時間がかかる
-                driver = new ChromeDriver(driverService, options);
-
-                // 起動後は好きなようにChromeを操作できる
-                driver.Navigate().GoToUrl(Settings.Instance.url);
-                // 画面キャプチャを撮る
-                _ = CheckNewComment();
-            });
+            // 起動後は好きなようにChromeを操作できる
+            driver.Navigate().GoToUrl(Settings.Instance.url);
+            // 画面キャプチャを撮る
+            _ = CheckNewComment();
         }
 
         public void ChangeURL(string newUrl)
@@ -91,6 +89,7 @@ namespace Zuaki
             if (Settings.Instance.useGPT && Settings.Instance.GPT_WebAPI != "")
             {
                 ChatElement[] generatedComments = await CommentGenerator.GetComments(chatElements);
+                if (generatedComments == null) return;
                 ChatManager.AddChatElement(generatedComments);
             }
         }

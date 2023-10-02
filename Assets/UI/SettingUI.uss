@@ -3,11 +3,14 @@ Toggle > VisualElement > #unity-checkmark {
     width: 30px;
     height: 30px;
     margin-left: 0px;
+    margin-right: 10px;
 }
 Foldout > Toggle > VisualElement {
     flex-direction: row;
 }
-#DetailSetting > Toggle > VisualElement {
+#DetailSetting > Toggle > VisualElement,
+#ReadGroup > Toggle > VisualElement,
+#AIGroup > Toggle > VisualElement{
     flex-direction: row-reverse;
 }
 TextField > VisualElement {
@@ -28,7 +31,7 @@ TextField > VisualElement {
 #ReadCharacterGroup > GroupBox > Button {
     width: 15%;
 }
-#ReadCharacterGroup, #EssentialSettingGroup{
+#ReadCharacterGroup, #EssentialSettingGroup, #ReadSettingGroup, #ReadGroup, #AIGroup{
     border-radius: 20px;
 }
 Button, #unity-text-input, RadioButton{
@@ -37,4 +40,17 @@ Button, #unity-text-input, RadioButton{
 Foldout > #unity-content{
     margin-left: 10px;
     margin-right: 10px;
+}
+#unity-text-field{
+    margin-left: 20px;
+    width: 80px;
+    height: 40px;
+}
+
+Slider > VisualElement > #unity-text-field > #unity-text-input > TextElement,
+SliderInt > VisualElement > #unity-text-field > #unity-text-input > TextElement{
+    -unity-text-align: middle-center;
+}
+Slider > Label, SliderInt > Label{
+    width: 23%;
 }

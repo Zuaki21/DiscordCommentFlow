@@ -1,30 +1,35 @@
+#if UNITY_EDITOR
 using AnnulusGames.LucidTools.Editor;
+#endif
 using AnnulusGames.LucidTools.Inspector;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using Zuaki;
+using System.Linq;
 
 namespace Zuaki
 {
     [CreateAssetMenu(fileName = "VoiceCharacterData", menuName = "Zuaki/VoiceCharacterData", order = 100)]
     public class VoiceCharacterData : SingletonScriptableObject<VoiceCharacterData>
     {
-        // "Name/Style"の形式で取得
+        // "Name/Style"の形式でid順に取得
         public static string[] AllCharacterStyles
         {
             get
             {
-                List<string> AllCharacterStyles = new List<string>();
-                foreach (var voiceCharacter in Instance.voiceCharacters)
+                List<(string, int)> allCharacterStyles = new List<(string, int)>();
+                foreach (VoiceCharacter voiceCharacter in Instance.voiceCharacters)
                 {
-                    foreach (var style in voiceCharacter.styles)
+                    foreach (Style style in voiceCharacter.styles)
                     {
-                        AllCharacterStyles.Add($"{voiceCharacter.name}/{style.name}");
+                        allCharacterStyles.Add((voiceCharacter.name + "/" + style.name, style.id));
                     }
                 }
-                return AllCharacterStyles.ToArray();
+                // id順にソート
+                allCharacterStyles = allCharacterStyles.OrderBy(x => x.Item2).ToList();
+                return allCharacterStyles.Select(x => x.Item1).ToArray();
             }
         }
         public static VoiceCharacter[] VoiceCharacters => Instance.voiceCharacters;

@@ -2,7 +2,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
+#if UNITY_EDITOR
 using UnityEditor.PackageManager.Requests;
+#endif
 using UnityEngine;
 using UnityEngine.Networking;
 using Zuaki;
@@ -12,7 +14,7 @@ namespace Zuaki
     public class VoiceVoxWebManager
     {
         static public string uri = "https://deprecatedapis.tts.quest/v2/voicevox/audio/";
-
+        public static int APIkeyIndex = 0;
         public static async UniTask<AudioClip> PostVoiceVoxWebRequest(string text, int? speakerID = null, float? speechSpeed = null, float? pitch = null, float? intonationScale = null)
         {
             SpeechOption option = new SpeechOption(speakerID, speechSpeed, pitch, intonationScale);
@@ -38,7 +40,7 @@ namespace Zuaki
             List<IMultipartFormSection> formData = new List<IMultipartFormSection>
             {
                 new MultipartFormDataSection("text", text),
-                new MultipartFormDataSection("key", Settings.Instance.VOICEVOX_WebAPI)
+                new MultipartFormDataSection("key", Settings.VOICEVOX_WebAPI[APIkeyIndex])
             };
 
             // オプションがないならデフォルト値を使う
@@ -57,7 +59,31 @@ namespace Zuaki
             }
             catch (UnityWebRequestException e) when (e.ResponseCode == 400)
             {
-                Debug.Log("読めない文字のみの可能性があります");
+                Debug.LogError("読めない文字が含まれているか、文字列が長すぎる可能性があります");
+                return null;
+            }
+            catch (UnityWebRequestException e) when (e.Message.Contains("notEnoughPoints"))
+            {
+                Debug.LogWarning("WEB版VOICEVOXのAPIのポイントが足りません");
+                Debug.Log("APIキーを変更します");
+                APIkeyIndex++;
+                if (APIkeyIndex >= Settings.VOICEVOX_WebAPI.Length)
+                {
+                    Debug.LogError("APIキーがすべて使われました");
+                    Debug.LogError("WEB版VOICEVOXのAPIのポイントが足りません");
+                    Debug.Log("Web版VOICEVOXを使わない設定にします");
+                    Settings.Instance.useLocalVoiceVox = true;
+                    SettingOperator.SetVoiceVoxType();
+                    Settings.Instance.useVoiceVox = false;
+                    SettingOperator.SetUseVoiceVox();
+                    APIkeyIndex = 0;
+                    return null;
+                }
+                return await PostVoiceVoxWebRequest(text, option);
+            }
+            catch (UnityWebRequestException e) when (e.ResponseCode == 429)
+            {
+                Debug.LogError("WEB版VOICEVOXへのリクエストが多すぎます");
                 return null;
             }
 
@@ -99,7 +125,6 @@ namespace Zuaki
 
             return audioClip;
         }
-
     }
 
     [System.Serializable]

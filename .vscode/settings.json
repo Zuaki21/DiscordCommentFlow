@@ -68,5 +68,6 @@
         "UGUI",
         "VIOCEVOX",
         "VOICEVOX"
-    ]
+    ],
+    "dotnet.defaultSolution": "Commenity.sln"
 }

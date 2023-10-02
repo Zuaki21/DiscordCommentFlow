@@ -37,6 +37,7 @@ Please generate the delivery comments as shown in the example according to the f
         {
             string[] realComments = chatElements.Select(e => e.Message).ToArray();
             string[] generatedComments = await GetComments(realComments);
+            if (generatedComments == null) return null;
             ChatElement[] chatElementsArray = generatedComments
             .Select(comment => new ChatElement(message: comment, commenter: SpeakerRole.GPT))
             .ToArray();
@@ -53,14 +54,25 @@ Please generate the delivery comments as shown in the example according to the f
                 content += " <in> " + realComments[i] + " </in>\n";
             }
 
-            ChatCompletionResponseBody response = await connection.CompleteChatAsync(content, default);
-            string responseMessage = response.Choices[0].Message.Content;
+            //HttpRequestException: 401 (Unauthorized)を取得する
+            try
+            {
+                ChatCompletionResponseBody response = await connection.CompleteChatAsync(content, default);
+                string responseMessage = response.Choices[0].Message.Content;
+                // 正規表現を使用してコメントを抽出
+                string[] generatedComments = Regex.Matches(responseMessage, @"<out>(.+)</out>")
+                .Cast<Match>().Select(match => match.Groups[1].Value).ToArray();
 
-            // 正規表現を使用してコメントを抽出
-            string[] generatedComments = Regex.Matches(responseMessage, @"<out>(.+)</out>")
-            .Cast<Match>().Select(match => match.Groups[1].Value).ToArray();
-
-            return generatedComments;
+                return generatedComments;
+            }
+            catch (Exception e) when (e.Message.Contains("invalid_api_key"))
+            {
+                Debug.LogError("ChatGPTのAPIキーが間違っています。");
+                Debug.Log("ChatGPTの使用をやめます。");
+                Settings.Instance.useGPT = false;
+                SettingOperator.SetUseGPT();
+                return null;
+            }
         }
     }
 }

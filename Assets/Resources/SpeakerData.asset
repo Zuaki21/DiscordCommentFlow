@@ -18,8 +18,8 @@ MonoBehaviour:
       characterNum: 1
       styleNum: 0
     Illustrator:
-      name: "\u56DB\u56FD\u3081\u305F\u3093(\u30CE\u30FC\u30DE\u30EB)"
-      characterNum: 0
+      name: "\u96E8\u6674\u306F\u3046(\u30CE\u30FC\u30DE\u30EB)"
+      characterNum: 3
       styleNum: 0
     SoundCreator:
       name: "\u6625\u65E5\u90E8\u3064\u3080\u304E(\u30CE\u30FC\u30DE\u30EB)"
@@ -34,10 +34,10 @@ MonoBehaviour:
       characterNum: 17
       styleNum: 0
     Other:
-      name: "\u51A5\u9CF4\u3072\u307E\u308A(\u30CE\u30FC\u30DE\u30EB)"
-      characterNum: 8
+      name: "\u305A\u3093\u3060\u3082\u3093(\u30CE\u30FC\u30DE\u30EB)"
+      characterNum: 1
       styleNum: 0
   defaultOption:
-    speed: 1.6
+    speed: 1.25
     pitch: 0
     intonationScale: 1

@@ -27,6 +27,8 @@ namespace Zuaki
         public bool useLocalVoiceVox = false;
         public bool useNameOnVoice = false;
         public bool useVoiceRecognize = false;
+        public int maxCommentLength = 50;
+        public int maxAllCommentLength = 100;
         class TextObject { public string text; public TextObject(string text) { this.text = text; } }
         public string GPT_WebAPI
         {
@@ -50,7 +52,27 @@ namespace Zuaki
         }
         private string _GPT_WebAPI = "";
         public string VOICEVOX_WebAPI = "インスペクターから設定してください";
-        public string url = "https://www.google.com/";
+        public string url
+        {
+            get
+            {
+                if (_url == "")
+                {
+                    TextObject textObject = new TextObject("");
+                    SaveMethods.Load(textObject, "url");
+                    _url = textObject.text;
+                }
+                return _url;
+            }
+            set
+            {
+                Debug.Log("urlを設定しました");
+                TextObject textObject = new TextObject(value);
+                SaveMethods.Save(textObject, "url");
+                _url = value;
+            }
+        }
+        private string _url = "";
         protected void Start()
         {
             if (useTestChat) url = test_url;
@@ -59,7 +81,7 @@ namespace Zuaki
         }
         protected void Update()
         {
-            if (Input.GetKeyDown(KeyCode.Return))
+            if (Input.GetKeyDown(KeyCode.Escape))
             {
                 if (SettingPanel.activeSelf)
                 {

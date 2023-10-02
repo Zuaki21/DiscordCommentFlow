@@ -26,18 +26,18 @@ MonoBehaviour:
       characterNum: 2
       styleNum: 0
     ScenarioWriter:
-      name: "WhiteCUL(\u305F\u306E\u3057\u3044)"
-      characterNum: 12
-      styleNum: 1
+      name: "\u96E8\u6674\u306F\u3046(\u30CE\u30FC\u30DE\u30EB)"
+      characterNum: 3
+      styleNum: 0
     GPT:
-      name: "\u5C0F\u591C/SAYO(\u30CE\u30FC\u30DE\u30EB)"
+      name: "\u5C0F\u591C\u30FBSAYO(\u30CE\u30FC\u30DE\u30EB)"
       characterNum: 17
       styleNum: 0
     Other:
-      name: "\u5C0F\u591C/SAYO(\u30CE\u30FC\u30DE\u30EB)"
-      characterNum: 17
+      name: "\u51A5\u9CF4\u3072\u307E\u308A(\u30CE\u30FC\u30DE\u30EB)"
+      characterNum: 8
       styleNum: 0
   defaultOption:
-    speed: 1.25
+    speed: 1.6
     pitch: 0
     intonationScale: 1

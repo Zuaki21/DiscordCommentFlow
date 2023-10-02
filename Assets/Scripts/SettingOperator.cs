@@ -8,14 +8,21 @@ using Zuaki;
 using System.Linq;
 using Fab.UITKDropdown;
 using UnityEditor.U2D.Animation;
+using System.Threading;
 
 namespace Zuaki
 {
     public class SettingOperator : SingletonMonoBehaviour<SettingOperator>
     {
+        SynchronizationContext context;
         UIDocument uiDocument;
+        Label loadingChannelLabel;
+        string loadingChannelText = "ページ読込中です...";
+
         protected void OnEnable()
         {
+            context = SynchronizationContext.Current;
+
             uiDocument = GetComponent<UIDocument>();
             VisualElement root = uiDocument.rootVisualElement;
 
@@ -23,14 +30,25 @@ namespace Zuaki
             TextField urlField = root.Q<TextField>("URLField");
             Button URLSubmit = root.Q<Button>("URLSubmit");
             urlField.value = Settings.Instance.url;
+            URLSubmit.SetEnabled(false);
             URLSubmit.RegisterCallback<ClickEvent>((evt) =>
             {
                 Settings.Instance.url = urlField.value;
                 ScrapingSelenium.Instance.ChangeURL(Settings.Instance.url);
+                URLSubmit.SetEnabled(false);
+            });
+            urlField.RegisterCallback<ChangeEvent<string>>((evt) =>
+            {
+                URLSubmit.SetEnabled(true);
             });
 
             // チャット設定(GPTとVOICEVOXが両方必要)
             var readAICommentsToggle = root.Q<Toggle>("ReadAIComments");
+            readAICommentsToggle.value = Settings.Instance.useVoiceVoxOnGPT;
+            readAICommentsToggle.RegisterCallback<ChangeEvent<bool>>((evt) =>
+            {
+                Settings.Instance.useVoiceVoxOnGPT = evt.newValue;
+            });
 
             // GPT設定
             TextField chatGPTAPIField = root.Q<TextField>("ChatGPTAPIField");
@@ -60,10 +78,11 @@ namespace Zuaki
 
             // VoiceVox設定
             Toggle useVoiceVoxToggle = root.Q<Toggle>("UseVoiceVoxToggle");
-            Toggle readNameToggle = root.Q<Toggle>("ReadName");
+            Toggle readNameToggle = root.Q<Toggle>("ReadUserName");
             RadioButtonGroup VoiceVoxTypeGroup = root.Q<RadioButtonGroup>("VoiceVoxTypeGroup");
             RadioButton localVoiceVox = root.Q<RadioButton>("LocalVoiceVox");
             RadioButton webVoiceVox = root.Q<RadioButton>("WebVoiceVox");
+            readNameToggle.value = Settings.Instance.useNameOnVoice;
             localVoiceVox.value = Settings.Instance.useLocalVoiceVox;
             webVoiceVox.value = !Settings.Instance.useLocalVoiceVox;
 
@@ -82,7 +101,10 @@ namespace Zuaki
                 readAICommentsToggle.SetEnabled(evt.newValue && Settings.Instance.useGPT);
                 readCharacterGroup.SetEnabled(evt.newValue);
             });
-
+            readNameToggle.RegisterCallback<ChangeEvent<bool>>((evt) =>
+            {
+                Settings.Instance.useNameOnVoice = evt.newValue;
+            });
             readAICommentsToggle.SetEnabled(Settings.Instance.useVoiceVox && Settings.Instance.useGPT);
             localVoiceVox.RegisterCallback<ChangeEvent<bool>>((evt) =>
             {
@@ -94,6 +116,10 @@ namespace Zuaki
             {
                 MakeMenu(role, root);
             }
+
+            //LoadingChannelText
+            loadingChannelLabel = root.Q<Label>("LoadingChannelText");
+            loadingChannelLabel.text = loadingChannelText;
         }
 
         void MakeMenu(SpeakerRole role, VisualElement root)
@@ -116,6 +142,32 @@ namespace Zuaki
             Style style = character.styles.First(x => x.name == characterStyle[1]);
             SpeakerData.GetRoleSetting(role).speakerID = style.id;
             button.text = role.ToString() + "\n<size=20>" + action.name;
+        }
+
+        // 設定画面のオブジェクトを更新する
+        public static void Reload()
+        {
+            Instance.context.Post(_ =>
+            {
+                Instance.OnEnable();
+            }, null);
+        }
+
+        public static void SetVoiceVoxType()
+        {
+            Instance.context.Post(_ =>
+            {
+                Instance.uiDocument.rootVisualElement.Q<RadioButtonGroup>("VoiceVoxTypeGroup").value = Settings.Instance.useLocalVoiceVox ? 0 : 1;
+            }, null);
+        }
+        // チャンネルの読み込み中のテキストを表示する
+        public static void SetChannelText(string text)
+        {
+            Instance.context.Post(_ =>
+            {
+                Instance.loadingChannelText = text;
+                Instance.loadingChannelLabel.text = text;
+            }, null);
         }
     }
 }

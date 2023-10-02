@@ -36,8 +36,6 @@ namespace Zuaki
                 {
                     return request.downloadHandler.data; //返ってきたデータ（クエリ）をそのまま戻り値として返す
                 }
-
-
             }
         }
 

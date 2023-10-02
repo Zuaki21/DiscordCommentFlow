@@ -4,12 +4,11 @@ Toggle > VisualElement > #unity-checkmark {
     height: 30px;
     margin-left: 0px;
 }
-Toggle > VisualElement {
-    flex-direction: row-reverse;
-}
-
 Foldout > Toggle > VisualElement {
     flex-direction: row;
+}
+#DetailSetting > Toggle > VisualElement {
+    flex-direction: row-reverse;
 }
 TextField > VisualElement {
     margin-left: auto;
@@ -18,13 +17,24 @@ TextField > VisualElement {
     flex-direction: row-reverse;
 }
 #unity-radio-button-group__container{
+    flex-frow: 1;
     margin-left: auto;
     flex-direction: row;
 }
-DropdownField > VisualElement > ScrollView {
-    background-color: pink;
-    mouse-wheel-scroll-size: 500;
+#VoiceVoxTypeGroup > VisualElement{
+    justify-content: space-between;
+    align-self: center;
 }
 #ReadCharacterGroup > GroupBox > Button {
     width: 15%;
+}
+#ReadCharacterGroup, #EssentialSettingGroup{
+    border-radius: 20px;
+}
+Button, #unity-text-input, RadioButton{
+    border-radius: 10px;
+}
+Foldout > #unity-content{
+    margin-left: 10px;
+    margin-right: 10px;
 }

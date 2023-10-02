@@ -23,7 +23,7 @@ namespace Zuaki
 
         protected void Start()
         {
-            PostVoiceVoxRequest();
+            VoiceVoxRequestRoutine();
         }
         async UniTask<AudioClip> GetChatClip(ChatElement chatElement)
         {
@@ -31,7 +31,18 @@ namespace Zuaki
             if (Settings.Instance.useLocalVoiceVox)
             {
                 VoiceVoxLocalManager voiceVoxManager = new VoiceVoxLocalManager();//VoiceVoxManagerクラスを作成
-                await voiceVoxManager.DownloadAudioClip(chatElement.Message, chatElement.SpeakerID);//音声合成する
+                //UnityWebRequestException: Cannot connect to destination hostを取得する
+                try
+                {
+                    await voiceVoxManager.DownloadAudioClip(chatElement.Message, chatElement.SpeakerID);//音声合成する
+                }
+                catch (System.Exception e) when (e.Message == "Cannot connect to destination host")
+                {
+                    Debug.Log("VoiceVoxサーバーに接続できませんでした。Web版VOICEVOXを使います。");
+                    Settings.Instance.useLocalVoiceVox = false;
+                    SettingOperator.SetVoiceVoxType();
+                    return await GetChatClip(chatElement);
+                }
                 newClip = voiceVoxManager.AudioClip; //生成した音声をAudioClipに設定
             }
             else
@@ -40,7 +51,7 @@ namespace Zuaki
             }
             return newClip;
         }
-        async void PostVoiceVoxRequest()
+        async void VoiceVoxRequestRoutine()
         {
             while (true)
             {
@@ -93,19 +104,51 @@ namespace Zuaki
                     string name = CleanUpText(newChatElement.Name);
                     message = $"{name}さん{message}";
                 }
+
+                //コメントが空の場合は読み上げない
+                if (message == "") continue;
                 ChatElement fixedChatElement = new ChatElement(message, commenter: newChatElement.Commenter);
+
+                Debug.Log($"コメントを追加しました: {fixedChatElement.Message}");
+                //コメントの文字総数が上限を超える場合は読み上げない
+                //コメント数が多すぎる場合の対処
+                if (fixedChatElement.Message.Length + CountCommentLetters() > Settings.Instance.maxAllCommentLength)
+                {
+                    Debug.Log("コメント数が多すぎるため読みとばします");
+                    continue;
+                }
+
                 ChatElementList.Add(fixedChatElement);
             }
         }
+        static int CountCommentLetters()
+        {
+            int count = 0;
+            foreach (ChatElement chatElement in ChatElementList)
+            {
+                count += chatElement.Message.Length;
+            }
+            return count;
+        }
+
+
         // テキストを整形する
         static string CleanUpText(string input)
         {
             // 全角スペースと半角スペースを削除
-            string noSpaceText = Regex.Replace(input, "[ 　]", string.Empty);
+            string fixText = Regex.Replace(input, "[ 　]", string.Empty);
             // タグを削除
-            string noTagText = Regex.Replace(noSpaceText, "<[^>]*?>", string.Empty);
+            fixText = Regex.Replace(fixText, "<[^>]*?>", string.Empty);
+            // httpから始まる文字列を"URL"に変換
+            fixText = Regex.Replace(fixText, @"http\S+", "URL");
             // ￥を円に変換
-            return Regex.Replace(noTagText, @"￥(\d+)", match => match.Groups[1].Value + "円");
+            fixText = Regex.Replace(fixText, @"￥(\d+)", match => match.Groups[1].Value + "円");
+            // コメントの文字数が上限を超える場合は上限までに切り詰める
+            if (fixText.Length > Settings.Instance.maxCommentLength)
+            {
+                fixText = fixText.Substring(0, Settings.Instance.maxCommentLength - 3) + "以下略";
+            }
+            return fixText;
         }
 
         protected void Update()
@@ -136,8 +179,6 @@ namespace Zuaki
                 ClipList.Insert(0, newClip);
             }
         }
-
-
     }
     public static class AudioUtils
     {

@@ -111,7 +111,19 @@ namespace Zuaki
             ReadOnlyCollection<IWebElement> messageElements = driver.FindElementsByClassName("Chat_messageText__k79m4");
             ReadOnlyCollection<IWebElement> nameElements = driver.FindElementsByClassName("Chat_username__5fTg6");
             ReadOnlyCollection<IWebElement> timeElements = driver.FindElementsByClassName("Chat_timestamp__nyBmU");
-
+            IWebElement channelElement = driver.FindElementByClassName("Chat_channelName__O6KEu");
+            if (channelElement == null && channelElement.Text == null && channelElement.Text == "")
+            {
+                Debug.Log("チャンネルを取得できませんでした");
+                SettingOperator.SetChannelText("チャンネルを取得できませんでした");
+            }
+            else
+            {
+                if (channelElement.Text.Contains("#loading.."))
+                    SettingOperator.SetChannelText("ページ読込中です...");
+                else
+                    SettingOperator.SetChannelText(channelElement.Text);
+            }
             // 取得した要素をnewChatElementにとして持つ
             List<ChatElement> chatElements = new List<ChatElement>();
 

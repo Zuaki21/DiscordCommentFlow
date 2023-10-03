@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 7350981750920773034}
   - component: {fileID: -3301921198353079701}
   - component: {fileID: 6899197413142903730}
+  - component: {fileID: -3186395598253351759}
   m_Layer: 5
   m_Name: FlowComment
   m_TagString: Untagged
@@ -34,12 +35,11 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 650, y: 335}
-  m_SizeDelta: {x: 5000, y: 50}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!114 &1671018530260962472
 MonoBehaviour:
@@ -53,6 +53,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3e722e6291daf4a488227bb7036608a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  fixedSpeedParam: 1
+  startPos: {x: 0, y: 0}
+  mouseStartPos: {x: 0, y: 0}
 --- !u!222 &7350981750920773033
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -116,7 +119,7 @@ MonoBehaviour:
   m_fontSizeMax: 72
   m_fontStyle: 0
   m_HorizontalAlignment: 1
-  m_VerticalAlignment: 256
+  m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_wordSpacing: 0
@@ -167,10 +170,16 @@ Rigidbody2D:
   m_AngularDrag: 0.05
   m_GravityScale: 1
   m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 6
 --- !u!114 &6899197413142903730
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -188,3 +197,17 @@ MonoBehaviour:
   PaddingLeft: 0
   PaddingRight: 0
   material: {fileID: 0}
+--- !u!114 &-3186395598253351759
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7350981750920773044}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3245ec927659c4140ac4f8d17403cc18, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_HorizontalFit: 2
+  m_VerticalFit: 2

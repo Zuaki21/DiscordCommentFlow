@@ -1,18 +1,13 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Zuaki;
 using System;
 using OpenQA.Selenium.Chrome;
 using Cysharp.Threading.Tasks;
-using System.Threading.Tasks;
 using OpenQA.Selenium;
 using System.Collections.ObjectModel;
-using System.Linq;
-using Unity.VisualScripting;
-#if UNITY_EDITOR
-using UnityEditor;
-#endif
+using System.Threading;
+using System.Text.RegularExpressions;
+
 
 namespace Zuaki
 {
@@ -21,7 +16,6 @@ namespace Zuaki
         private ChromeDriver driver;
         public bool isHeadless = true;
         [SerializeField] GameObject LoadingCommentObj;
-
         void Start()
         {
             LoadingCommentObj.SetActive(true);
@@ -46,19 +40,34 @@ namespace Zuaki
 
             ChromeDriverService driverService = ChromeDriverService.CreateDefaultService();
             driverService.HideCommandPromptWindow = true;
+
             // NOTE: 起動にはそこそこ時間がかかる
             driver = new ChromeDriver(driverService, options);
 
             // 起動後は好きなようにChromeを操作できる
-            driver.Navigate().GoToUrl(Settings.Instance.url);
-            // 画面キャプチャを撮る
+            Debug.Log($"Discord Streamkit Overlayを開きます。\n<size=10><color=#e0ffff><u><link=\"{SettingManager.URL}\">{SettingManager.URL}</link></u></color></size>");
+            driver.Navigate().GoToUrl(SettingManager.URL);
+            // 画面キャプチャを撮る(あえて非同期で実行している)
             _ = CheckNewComment();
+        }
+
+        void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.Space) && Input.GetKey(KeyCode.LeftControl))
+            {
+                AddTestChat();
+            }
+        }
+        void AddTestChat()
+        {
+            AddChatElements(new ChatElement[] { new ChatElement("これはテストコメントです") });
         }
 
         public void ChangeURL(string newUrl)
         {
-            Settings.Instance.url = newUrl;
-            driver.Navigate().GoToUrl(Settings.Instance.url);
+            Debug.Log($"Discord Streamkit OverlayのURLを変更しました。\n<size=10><color=#e0ffff><u><link=\"{newUrl}\">{newUrl}</link></u></color></size=10>");
+            SettingManager.URL = newUrl;
+            driver.Navigate().GoToUrl(SettingManager.URL);
         }
 
         List<ChatElement> chatElementHistory = new List<ChatElement>();
@@ -66,27 +75,19 @@ namespace Zuaki
         {
             while (true)
             {
-                await UniTask.SwitchToThreadPool();
-                List<ChatElement> newChatElements = await GetNewComment();
-                await UniTask.SwitchToMainThread(); // メインスレッドに戻る
-
-                if (newChatElements.Count > 0)
-                {
-                    if (LoadingCommentObj.activeSelf) LoadingCommentObj.SetActive(false);
-                    AddComment(newChatElements.ToArray());
-                }
+                _ = GetNewComment();
                 await UniTask.Delay(1000);// 1秒待つ
             }
         }
 
-        async void AddComment(ChatElement[] chatElements)
+        async void AddChatElements(ChatElement[] chatElements)
         {
             if (chatElements.Length == 0) return;
             // 新しいコメントがあったら追加
             ChatManager.AddChatElement(chatElements);
 
             // GPTを使う設定の場合はコメントを生成して追加
-            if (Settings.Instance.useGPT && Settings.Instance.GPT_WebAPI != "")
+            if (SettingManager.Settings.useGPT && SettingManager.GPT_WebAPI != "")
             {
                 ChatElement[] generatedComments = await CommentGenerator.GetComments(chatElements);
                 if (generatedComments == null) return;
@@ -94,50 +95,83 @@ namespace Zuaki
             }
         }
 
-        async UniTask<List<ChatElement>> GetNewComment()
+        async UniTask GetNewComment()
         {
+            // スレッドプールに切り替え、コメント取得時に固まらないようにする
             await UniTask.SwitchToThreadPool();
 
             List<ChatElement> chatElements = GetComment();
             List<ChatElement> newChatElements = FilterNewComments(chatElements);
 
             await UniTask.SwitchToMainThread(); // メインスレッドに戻る
-            return newChatElements;
-        }
 
+            if (newChatElements.Count > 0)
+            {
+                if (LoadingCommentObj.activeSelf) LoadingCommentObj.SetActive(false);
+                AddChatElements(newChatElements.ToArray());
+            }
+        }
+        bool isError = false;
         List<ChatElement> GetComment()
         {
+            // 取得した要素をnewChatElementにとして持つ
+            List<ChatElement> chatElements = new List<ChatElement>();
+
+            // メッセージの要素を取得
             ReadOnlyCollection<IWebElement> messageElements = driver.FindElementsByClassName("Chat_messageText__k79m4");
             ReadOnlyCollection<IWebElement> nameElements = driver.FindElementsByClassName("Chat_username__5fTg6");
             ReadOnlyCollection<IWebElement> timeElements = driver.FindElementsByClassName("Chat_timestamp__nyBmU");
-            IWebElement channelElement = driver.FindElementByClassName("Chat_channelName__O6KEu");
-            if (channelElement == null && channelElement.Text == null && channelElement.Text == "")
+            ReadOnlyCollection<IWebElement> channelElements = driver.FindElementsByClassName("Chat_channelName__O6KEu");
+
+            if (channelElements.Count == 0)
             {
-                Debug.Log("チャンネルを取得できませんでした");
-                SettingOperator.SetChannelText("チャンネルを取得できませんでした");
+                RunOnMainThread(() =>
+                {
+                    if (!isError)
+                    {
+                        Debug.LogError("チャットを取得できませんでした。Discord Streamkit OverlayのURLが間違っている可能性があります。");
+                        isError = true;
+                    }
+                });
+                SettingOperator.SetChannelText("チャットを取得できませんでした");
+                return chatElements;
             }
-            else
+
+            IWebElement channelElement = channelElements[0];
+            if (channelElement != null && !string.IsNullOrWhiteSpace(channelElement.Text))
             {
+                isError = false;
                 if (channelElement.Text.Contains("#loading.."))
-                    SettingOperator.SetChannelText("ページ読込中です...");
+                    SettingOperator.SetChannelText("チャット読込中です...");
                 else
                     SettingOperator.SetChannelText(channelElement.Text);
             }
-            // 取得した要素をnewChatElementにとして持つ
-            List<ChatElement> chatElements = new List<ChatElement>();
+            else
+            {
+                RunOnMainThread(() =>
+                {
+                    if (!isError)
+                    {
+                        Debug.Log("チャットを取得できませんでした");
+                        isError = true;
+                    }
+                });
+                SettingOperator.SetChannelText("チャットを取得できませんでした");
+            }
+
 
             for (int i = 0; i < messageElements.Count; i++)
             {
                 // メッセージの内容がないならスキップ
                 if (messageElements[i] == null) continue;
-                if (messageElements[i].Text == null) continue;
-                if (messageElements[i].Text == "") continue;
+                if (string.IsNullOrWhiteSpace(messageElements[i].Text)) continue;
 
+                SpeakerRole role = ChatElement.GetRole(nameElements[i].GetAttribute("style"));
                 ChatElement chatElement = new ChatElement(
                     messageElements[i].Text,
                     nameElements[i].Text,
                     timeElements[i].Text,
-                    nameElements[i].GetAttribute("style")
+                    role
                 );
                 chatElements.Add(chatElement);
             }
@@ -191,24 +225,16 @@ namespace Zuaki
         public string Message { get; private set; } = null;
         public string Name { get; private set; } = null;
         public string Time { get; private set; } = null;
-        public SpeakerRole Commenter = SpeakerRole.Other;
-        public int SpeakerID => SpeakerData.GetSpeakerID(Commenter);
+        public SpeakerRole role = SpeakerRole.Other;
+        public int SpeakerID => SpeakerData.GetSpeakerID(role);
         public ChatElement(string message = null, string name = null, string time = null, SpeakerRole commenter = SpeakerRole.Other)
         {
             this.Message = message;
             this.Name = name;
             this.Time = time;
-            this.Commenter = commenter;
+            this.role = commenter;
         }
-        public ChatElement(string message = null, string name = null, string time = null, string style = null)
-        {
-            this.Message = message;
-            this.Name = name;
-            this.Time = time;
-            this.Commenter = GetCommenter(style);
-        }
-
-        SpeakerRole GetCommenter(string style)
+        public static SpeakerRole GetRole(string style)
         {
             if (style.Contains("color: rgb(241, 196, 15);")) return SpeakerRole.Programmer;
             if (style.Contains("color: rgb(46, 204, 113);")) return SpeakerRole.Illustrator;
@@ -221,7 +247,7 @@ namespace Zuaki
             if (this.Message == other.Message &&
                 this.Name == other.Name &&
                 this.Time == other.Time &&
-                this.Commenter == other.Commenter)
+                this.role == other.role)
             {
                 return true;
             }

@@ -31,7 +31,7 @@ namespace Zuaki
             Instance.CreateFlowChat(chatElements);
 
             // VoiceVoxを使う設定の場合は音声生成リストに追加
-            if (Settings.Instance.useVoiceVox)
+            if (SettingManager.Settings.useVoiceVox)
             {
                 VoiceSpeaker.AddComment(chatElements);
             }
@@ -47,7 +47,10 @@ namespace Zuaki
 #endif
                 Material superChatMaterial = null;
                 int chatMoney = 0;
-                chatMoney = JudgeSuperChat(newElement.Message);
+
+                if (newElement.role != SpeakerRole.GPT)
+                    chatMoney = JudgeSuperChat(newElement.Message);
+
                 superChatMaterial = GetSuperChatMaterial(chatMoney);
 
                 GameObject newFlowChatObject = Instantiate(flowCommentPrefab);
@@ -64,18 +67,22 @@ namespace Zuaki
                 //コメントを設定
                 textMeshProUGUI.text = newElement.Message;
                 //Materialを設定
-                textMeshProUGUI.fontMaterial = chatMaterial.GetMaterial(newElement.Commenter);
+                textMeshProUGUI.fontMaterial = chatMaterial.GetMaterial(newElement.role);
                 //親を設定
                 newFlowChatObject.transform.SetParent(commentParent);
 
                 //サイズを設定
                 newFlowChatObject.transform.localScale = Vector3.one;
                 FlowComment flowComment = newFlowChatObject.GetComponent<FlowComment>();
+
                 //コメントの位置が重ならないように必要に応じて変更
-                newFlowChatObject.transform.localPosition = GetFlowChatPosition(flowComment);
+                flowComment.transform.localPosition = new Vector2(rightLocalX, topLocalY);
+                SetFlowChatPosition(flowComment);
+
                 allFlowComments.Add(flowComment);
-                if (chatMoney > 0)
-                    flowComment.fixedSpeedParam = 0.5f;
+
+                //コメントの速度を設定
+                if (chatMoney > 0) flowComment.fixedSpeedParam = 0.8f;
 
                 await UniTask.Delay(millisecondsDelay: Random.Range(0, 2000));
             }
@@ -96,6 +103,9 @@ namespace Zuaki
             {
                 amount = int.Parse(match.Groups[1].Value);
             }
+
+            //100円以下はスーパーチャットとして認めない
+            if (amount < 100) return 0;
 
             return amount;
         }
@@ -118,30 +128,50 @@ namespace Zuaki
         }
 
         //コメントの高さが重ならないようにする
-        Vector3 GetFlowChatPosition(FlowComment newflowComment)
+        void SetFlowChatPosition(FlowComment newflowComment)
         {
-            float localPosY = topLocalY;
+            int roop = 0;
             while (true)
             {
                 bool isOverlap = false;
                 foreach (FlowComment flowComment in allFlowComments)
                 {
                     //ローカル座標に変換
-                    if (Mathf.Approximately(flowComment.transform.localPosition.y, localPosY) && PredictCommentConflicts(flowComment, newflowComment) == true)
+                    if (IsOverlappingHeights(flowComment, newflowComment) && IsPredictConflicts(flowComment, newflowComment) == true)
                     {
-                        localPosY -= (Settings.Instance.fontSize + 5);
+                        float yInterval = (flowComment.commentHeight + newflowComment.commentHeight) / 2 + 1;
+                        newflowComment.transform.localPosition = new Vector2(newflowComment.transform.localPosition.x, newflowComment.transform.localPosition.y - yInterval);
                         isOverlap = true;
                         break;
                     }
                 }
+                roop++;
+                if (roop > 100)
+                {
+                    Debug.Log("roop over");
+                    break;
+                }
+
                 if (isOverlap == false)
                     break;
             }
-            return new Vector3(rightLocalX, localPosY, 0);
         }
 
+        //y座標と高さ幅heighから重なるかどうかを予測する
+        bool IsOverlappingHeights(FlowComment earlyComment, FlowComment lateComment)
+        {
+            float earlyTop = earlyComment.transform.localPosition.y + earlyComment.commentHeight / 2;
+            float earlyBottom = earlyComment.transform.localPosition.y - earlyComment.commentHeight / 2;
+            float lateTop = lateComment.transform.localPosition.y + lateComment.commentHeight / 2;
+            float lateBottom = lateComment.transform.localPosition.y - lateComment.commentHeight / 2;
+
+            if (earlyTop < lateBottom || lateTop < earlyBottom) return false;
+            else return true;
+        }
+
+
         // コメントが衝突するかどうかを予測する
-        bool PredictCommentConflicts(FlowComment earlyComment, FlowComment lateComment)
+        bool IsPredictConflicts(FlowComment earlyComment, FlowComment lateComment)
         {
             // 相対衝突時間を求める
             float relativeDistance = rightLocalX - (earlyComment.transform.localPosition.x + earlyComment.commentLength);

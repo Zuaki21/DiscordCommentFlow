@@ -37,7 +37,9 @@ MonoBehaviour:
       name: "\u305A\u3093\u3060\u3082\u3093(\u30CE\u30FC\u30DE\u30EB)"
       characterNum: 1
       styleNum: 0
-  defaultOption:
+  speakerOption:
     speed: 1.25
     pitch: 0
     intonationScale: 1
+    maxCommentLength: 50
+    maxAllCommentLength: 100

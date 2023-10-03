@@ -13,16 +13,14 @@ namespace Zuaki
 {
     public class SettingOperator : SingletonMonoBehaviour<SettingOperator>
     {
-        SynchronizationContext context;
         UIDocument uiDocument;
         Label loadingChannelLabel;
         [SerializeField] GameObject LogPanel;
         bool detailSetting = false;
-        string loadingChannelText = "ページ読込中です...";
+        string loadingChannelText = "チャット読込中です...";
 
         protected void OnEnable()
         {
-            context = SynchronizationContext.Current;
 
             uiDocument = GetComponent<UIDocument>();
             VisualElement root = uiDocument.rootVisualElement;
@@ -30,19 +28,19 @@ namespace Zuaki
             // URL設定
             TextField urlField = root.Q<TextField>("URLField");
             Button URLSubmit = root.Q<Button>("URLSubmit");
-            if (Settings.Instance.url == "")
+            if (SettingManager.URL == "")
             {
                 urlField.value = "URLを入力してください";
             }
             else
             {
-                urlField.value = Settings.Instance.url;
+                urlField.value = SettingManager.URL;
             }
             URLSubmit.SetEnabled(false);
             URLSubmit.RegisterCallback<ClickEvent>((evt) =>
             {
-                Settings.Instance.url = urlField.value;
-                ScrapingSelenium.Instance.ChangeURL(Settings.Instance.url);
+                SettingManager.URL = urlField.value;
+                ScrapingSelenium.Instance.ChangeURL(SettingManager.URL);
                 URLSubmit.SetEnabled(false);
             });
             urlField.RegisterCallback<ChangeEvent<string>>((evt) =>
@@ -52,10 +50,10 @@ namespace Zuaki
 
             // チャット設定(GPTとVOICEVOXが両方必要)
             var readAICommentsToggle = root.Q<Toggle>("ReadAIComments");
-            readAICommentsToggle.value = Settings.Instance.useVoiceVoxOnGPT;
+            readAICommentsToggle.value = SettingManager.Settings.useVoiceVoxOnGPT;
             readAICommentsToggle.RegisterCallback<ChangeEvent<bool>>((evt) =>
             {
-                Settings.Instance.useVoiceVoxOnGPT = evt.newValue;
+                SettingManager.Settings.useVoiceVoxOnGPT = evt.newValue;
             });
 
             // GPT設定
@@ -63,25 +61,25 @@ namespace Zuaki
             Button chatGPTAPISubmit = root.Q<Button>(name: "ChatGPTAPISubmit");
             GroupBox GPTAPIGroup = root.Q<GroupBox>("GPTAPIGroup");
             Toggle useAiToggle = root.Q<Toggle>("UseAIToggle");
-            if (Settings.Instance.GPT_WebAPI == "")
+            if (SettingManager.GPT_WebAPI == "")
             {
                 chatGPTAPIField.value = "APIキーを入力してください";
             }
             else
             {
-                chatGPTAPIField.value = Settings.Instance.GPT_WebAPI;
+                chatGPTAPIField.value = SettingManager.GPT_WebAPI;
             }
-            useAiToggle.value = Settings.Instance.useGPT;
-            GPTAPIGroup.SetEnabled(Settings.Instance.useGPT);
+            useAiToggle.value = SettingManager.Settings.useGPT;
+            GPTAPIGroup.SetEnabled(SettingManager.Settings.useGPT);
             useAiToggle.RegisterCallback<ChangeEvent<bool>>((evt) =>
             {
-                Settings.Instance.useGPT = evt.newValue;
+                SettingManager.Settings.useGPT = evt.newValue;
                 GPTAPIGroup.SetEnabled(evt.newValue);
-                readAICommentsToggle.SetEnabled(evt.newValue && Settings.Instance.useVoiceVox);
+                readAICommentsToggle.SetEnabled(evt.newValue && SettingManager.Settings.useVoiceVox);
             });
             chatGPTAPISubmit.RegisterCallback<ClickEvent>((evt) =>
             {
-                Settings.Instance.GPT_WebAPI = chatGPTAPIField.value;
+                SettingManager.GPT_WebAPI = chatGPTAPIField.value;
             });
 
             // VoiceVox設定
@@ -90,28 +88,29 @@ namespace Zuaki
             RadioButtonGroup VoiceVoxTypeGroup = root.Q<RadioButtonGroup>("VoiceVoxTypeGroup");
             RadioButton localVoiceVox = root.Q<RadioButton>("LocalVoiceVox");
             RadioButton webVoiceVox = root.Q<RadioButton>("WebVoiceVox");
-            readNameToggle.value = Settings.Instance.useNameOnVoice;
-            localVoiceVox.value = Settings.Instance.useLocalVoiceVox;
-            webVoiceVox.value = !Settings.Instance.useLocalVoiceVox;
+            readNameToggle.value = SettingManager.Settings.useNameOnVoice;
+            localVoiceVox.value = SettingManager.Settings.useLocalVoiceVox;
+            webVoiceVox.value = !SettingManager.Settings.useLocalVoiceVox;
             VisualElement readGroup = root.Q<VisualElement>("ReadGroup");
             VisualElement readCharacterGroup = root.Q<VisualElement>("ReadCharacterGroup");
 
 
-            useVoiceVoxToggle.value = Settings.Instance.useVoiceVox;
-            readGroup.SetEnabled(Settings.Instance.useVoiceVox);
+            useVoiceVoxToggle.value = SettingManager.Settings.useVoiceVox;
+            readGroup.SetEnabled(SettingManager.Settings.useVoiceVox);
             useVoiceVoxToggle.RegisterCallback<ChangeEvent<bool>>((evt) =>
             {
+                SettingManager.Settings.useVoiceVox = evt.newValue;
                 readGroup.SetEnabled(evt.newValue);
-                readAICommentsToggle.SetEnabled(evt.newValue && Settings.Instance.useGPT);
+                readAICommentsToggle.SetEnabled(evt.newValue && SettingManager.Settings.useGPT);
             });
             readNameToggle.RegisterCallback<ChangeEvent<bool>>((evt) =>
             {
-                Settings.Instance.useNameOnVoice = evt.newValue;
+                SettingManager.Settings.useNameOnVoice = evt.newValue;
             });
-            readAICommentsToggle.SetEnabled(Settings.Instance.useVoiceVox && Settings.Instance.useGPT);
+            readAICommentsToggle.SetEnabled(SettingManager.Settings.useVoiceVox && SettingManager.Settings.useGPT);
             localVoiceVox.RegisterCallback<ChangeEvent<bool>>((evt) =>
             {
-                Settings.Instance.useLocalVoiceVox = evt.newValue;
+                SettingManager.Settings.useLocalVoiceVox = evt.newValue;
             });
 
             //読み上げキャラクター設定
@@ -136,11 +135,15 @@ namespace Zuaki
                 gameObject.SetActive(false);
             });
 
+            VisualElement footer = root.Q<VisualElement>("Footer");
             Foldout detailSettingFoldout = root.Q<Foldout>("DetailSettingFoldout");
+            ChangeFooterPosition(footer, root, detailSettingFoldout);
+
             detailSettingFoldout.value = detailSetting;
             detailSettingFoldout.RegisterCallback<ChangeEvent<bool>>((evt) =>
             {
-                detailSetting = evt.newValue;
+                detailSetting = detailSettingFoldout.value;
+                ChangeFooterPosition(footer, root, detailSettingFoldout);
             });
 
             Button resetButton = root.Q<Button>("ResetButton");
@@ -148,6 +151,58 @@ namespace Zuaki
             {
                 Reset();
             });
+            SliderInt fontSizeSlider = root.Q<SliderInt>("FontSizeSlider");
+            fontSizeSlider.value = SettingManager.Settings.fontSize;
+            fontSizeSlider.RegisterCallback<ChangeEvent<int>>((evt) =>
+            {
+                SettingManager.Settings.fontSize = evt.newValue;
+            });
+
+            Slider flowSpeedSlider = root.Q<Slider>("FlowSpeedSlider");
+            flowSpeedSlider.value = SettingManager.Settings.flowSpeed;
+            flowSpeedSlider.RegisterCallback<ChangeEvent<float>>((evt) =>
+            {
+                SettingManager.Settings.flowSpeed = evt.newValue;
+            });
+
+            Slider readSpeedSlider = root.Q<Slider>("ReadSpeedSlider");
+            readSpeedSlider.value = SpeakerData.SpeakerOption.speed;
+            readSpeedSlider.RegisterCallback<ChangeEvent<float>>((evt) =>
+            {
+                SpeakerData.SpeakerOption.speed = evt.newValue;
+            });
+
+            Slider readPitchSlider = root.Q<Slider>("ReadPitchSlider");
+            readPitchSlider.value = SpeakerData.SpeakerOption.pitch;
+            readPitchSlider.RegisterCallback<ChangeEvent<float>>((evt) =>
+            {
+                SpeakerData.SpeakerOption.pitch = evt.newValue;
+            });
+
+            Slider readIntonationScaleSlider = root.Q<Slider>("ReadIntonationScaleSlider");
+            readIntonationScaleSlider.value = SpeakerData.SpeakerOption.intonationScale;
+            readIntonationScaleSlider.RegisterCallback<ChangeEvent<float>>((evt) =>
+            {
+                SpeakerData.SpeakerOption.intonationScale = evt.newValue;
+            });
+
+            SliderInt readMaxLengthSlider = root.Q<SliderInt>("ReadMaxLengthSlider");
+            readMaxLengthSlider.value = SpeakerData.SpeakerOption.maxCommentLength;
+            readMaxLengthSlider.RegisterCallback<ChangeEvent<int>>((evt) =>
+            {
+                SpeakerData.SpeakerOption.maxCommentLength = evt.newValue;
+            });
+
+            SliderInt readMaxAllLengthSlider = root.Q<SliderInt>("ReadMaxAllLengthSlider");
+            readMaxAllLengthSlider.value = SpeakerData.SpeakerOption.maxAllCommentLength;
+            readMaxAllLengthSlider.RegisterCallback<ChangeEvent<int>>((evt) =>
+            {
+                SpeakerData.SpeakerOption.maxAllCommentLength = evt.newValue;
+            });
+
+            Label versionLabel = root.Q<Label>("VersionLabel");
+            //製品名 Ver.バージョン
+            versionLabel.text = $"{Application.productName} Ver.{Application.version}";
         }
 
         void MakeMenu(SpeakerRole role, VisualElement root)
@@ -175,48 +230,47 @@ namespace Zuaki
         // 設定画面のオブジェクトを更新する
         public static void Reload()
         {
-            Instance.context.Post(_ =>
-            {
-                Instance.OnEnable();
-            }, null);
+            RunOnMainThread(() =>
+             {
+                 Instance.OnEnable();
+             });
         }
 
         public static void SetVoiceVoxType()
         {
-            Instance.context.Post(_ =>
+            RunOnMainThread(() =>
             {
                 if (Instance.gameObject.activeSelf == false) return;
-                Instance.uiDocument.rootVisualElement.Q<RadioButtonGroup>("VoiceVoxTypeGroup").value = Settings.Instance.useLocalVoiceVox ? 0 : 1;
-            }, null);
+                Instance.uiDocument.rootVisualElement.Q<RadioButtonGroup>("VoiceVoxTypeGroup").value = SettingManager.Settings.useLocalVoiceVox ? 0 : 1;
+            });
         }
         public static void SetUseGPT()
         {
-            Instance.context.Post(_ =>
+            RunOnMainThread(() =>
             {
                 if (Instance.gameObject.activeSelf == false) return;
-                Instance.uiDocument.rootVisualElement.Q<Toggle>("UseAIToggle").value = Settings.Instance.useGPT;
-            }, null);
+                Instance.uiDocument.rootVisualElement.Q<Toggle>("UseAIToggle").value = SettingManager.Settings.useGPT;
+            });
         }
 
         public static void SetUseVoiceVox()
         {
-            Instance.context.Post(_ =>
+            RunOnMainThread(() =>
             {
                 if (Instance.gameObject.activeSelf == false) return;
-                Instance.uiDocument.rootVisualElement.Q<Toggle>("UseVoiceVoxToggle").value = Settings.Instance.useVoiceVox;
-            }, null);
+                Instance.uiDocument.rootVisualElement.Q<Toggle>("UseVoiceVoxToggle").value = SettingManager.Settings.useVoiceVox;
+            });
         }
-
 
         // チャンネルの読み込み中のテキストを表示する
         public static void SetChannelText(string text)
         {
-            Instance.context.Post(_ =>
+            RunOnMainThread(() =>
             {
                 if (Instance.gameObject.activeSelf == false) return;
                 Instance.loadingChannelText = text;
                 Instance.loadingChannelLabel.text = "状態：" + text;
-            }, null);
+            });
         }
 
         public static void Reset()
@@ -226,6 +280,25 @@ namespace Zuaki
             // アプリを再起動する
             System.Diagnostics.Process.Start(Application.dataPath.Replace("_Data", ".exe"));
             Application.Quit();
+        }
+
+        void ChangeFooterPosition(VisualElement footer, VisualElement root, Foldout detailSettingFoldout)
+        {
+            if (detailSetting)
+            {
+                //DetailSettingFoldoutの親を取得
+                VisualElement parent = detailSettingFoldout.parent;
+                //footerをDetailSettingFoldoutの次に移動
+                parent.Insert(parent.IndexOf(detailSettingFoldout) + 1, footer);
+            }
+            else
+            {
+                //ルート直下にあるVisualElementを取得
+                VisualElement rootElement = root.ElementAt(0);
+                //footerをルート直下にあるVisualElementの最後の要素として追加
+                rootElement.Add(footer);
+            }
+
         }
     }
 }

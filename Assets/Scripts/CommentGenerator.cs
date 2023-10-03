@@ -46,7 +46,7 @@ Please generate the delivery comments as shown in the example according to the f
         static public async UniTask<string[]> GetComments(string[] realComments)
         {
             ChatCompletionAPIConnection connection =
-             new ChatCompletionAPIConnection(Settings.Instance.GPT_WebAPI, new SimpleChatMemory(), RolePrompt);
+             new ChatCompletionAPIConnection(SettingManager.GPT_WebAPI, new SimpleChatMemory(), RolePrompt);
 
             string content = "";
             for (int i = 0; i < realComments.Length; i++)
@@ -69,7 +69,7 @@ Please generate the delivery comments as shown in the example according to the f
             {
                 Debug.LogError("ChatGPTのAPIキーが間違っています。");
                 Debug.Log("ChatGPTの使用をやめます。");
-                Settings.Instance.useGPT = false;
+                SettingManager.Settings.useGPT = false;
                 SettingOperator.SetUseGPT();
                 return null;
             }

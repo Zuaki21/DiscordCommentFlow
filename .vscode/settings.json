@@ -54,8 +54,10 @@
     "cSpell.words": [
         "Behaviour",
         "checkmark",
+        "chromedriver",
         "Cysharp",
         "dataname",
+        "Dont",
         "GPTAPI",
         "hosei",
         "Mathf",
@@ -64,10 +66,14 @@
         "Prefs",
         "pytz",
         "Rigidbody",
+        "roop",
         "Scriptable",
+        "Streamkit",
+        "Tweening",
         "UGUI",
         "VIOCEVOX",
-        "VOICEVOX"
+        "VOICEVOX",
+        "WEBGL"
     ],
     "dotnet.defaultSolution": "Commenity.sln"
 }

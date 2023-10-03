@@ -17,8 +17,11 @@ namespace Zuaki
         Json,//Jsonファイルで保存(暗号化なし)
         Binary,//Binaryファイルで保存(暗号化あり)
     }
-    public class SaveMethods
+    public static class SaveMethods
     {
+
+        //保存形式/////////////////////////////////////////////////////////
+        //使い方に合わせて自由に変更してください
 #if UNITY_WEBGL
         static SaveType saveType = SaveType.SecurePlayerPrefs;
 #elif UNITY_EDITOR
@@ -26,9 +29,10 @@ namespace Zuaki
 #else
         static SaveType saveType = SaveType.Binary;
 #endif
+        //////////////////////////////////////////////////////////////////
 
         //保存
-        public static void Save(object obj, string dataName)
+        public static void Save(this object obj, string dataName)
         {
             switch (saveType)
             {
@@ -75,7 +79,7 @@ namespace Zuaki
             File.WriteAllBytes(path, arrEncrypted);
         }
         //読み込み
-        public static void Load(object obj, string dataName)
+        public static void Load(this object obj, string dataName)
         {
             switch (saveType)
             {
@@ -239,6 +243,6 @@ namespace Zuaki
                 Delete(dataName);
             }
         }
-        static string[] allDataName = { "GPT_WebAPI", "url" };
+        static string[] allDataName = { "GPT_WebAPI", "url", "SpeakerData", "Settings" };
     }
 }

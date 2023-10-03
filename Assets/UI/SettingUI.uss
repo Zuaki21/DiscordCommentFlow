@@ -31,7 +31,7 @@ TextField > VisualElement {
 #ReadCharacterGroup > GroupBox > Button {
     width: 15%;
 }
-#ReadCharacterGroup, #EssentialSettingGroup, #ReadSettingGroup, #ReadGroup, #AIGroup{
+#ReadCharacterGroup, #EssentialSettingGroup, #HowToGroup, #ReadSettingGroup, #ReadGroup, #AIGroup, #DetailSettingFoldout{
     border-radius: 20px;
 }
 Button, #unity-text-input, RadioButton{
@@ -45,6 +45,7 @@ Foldout > #unity-content{
     margin-left: 20px;
     width: 80px;
     height: 40px;
+    align-self: center;
 }
 
 Slider > VisualElement > #unity-text-field > #unity-text-input > TextElement,
@@ -52,5 +53,5 @@ SliderInt > VisualElement > #unity-text-field > #unity-text-input > TextElement{
     -unity-text-align: middle-center;
 }
 Slider > Label, SliderInt > Label{
-    width: 23%;
+    width: 25%;
 }

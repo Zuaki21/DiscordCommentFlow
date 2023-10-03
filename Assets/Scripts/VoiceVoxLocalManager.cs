@@ -42,7 +42,7 @@ namespace Zuaki
         public async UniTask DownloadAudioClip(string text, int speakerId) //クエリを投げて音声合成してもらい、AudioClipを受け取る関数
         {
             byte[] query = await GetQuery(text, speakerId);//音声合成用のクエリを作成する
-            query = SetOption(query, SpeakerData.DefaultOption);//デフォルトのオプションを設定する
+            query = SetOption(query, SpeakerData.SpeakerOption);//デフォルトのオプションを設定する
 
             string Url = baseURL + $"synthesis?speaker={speakerId}";// 問い合わせ先URLを作成
             using (UnityWebRequest request = UnityWebRequestMultimedia.GetAudioClip(Url, AudioType.WAV))//WAV形式のデータを要求するリクエストを作成
@@ -63,13 +63,13 @@ namespace Zuaki
             }
         }
 
-        byte[] SetOption(byte[] query, DefaultSpeechOption option)
+        byte[] SetOption(byte[] query, SpeakerOption option)
         {
             string querystring = Encoding.UTF8.GetString(query); //クエリを文字列に変換してデバッグログに出力
             JObject jsonObject = JObject.Parse(querystring);
-            jsonObject["speedScale"] = SpeakerData.DefaultOption.speed;
-            jsonObject["pitchScale"] = SpeakerData.DefaultOption.pitch;
-            jsonObject["intonationScale"] = SpeakerData.DefaultOption.intonationScale;
+            jsonObject["speedScale"] = SpeakerData.SpeakerOption.speed;
+            jsonObject["pitchScale"] = SpeakerData.SpeakerOption.pitch;
+            jsonObject["intonationScale"] = SpeakerData.SpeakerOption.intonationScale;
             querystring = jsonObject.ToString();
             return Encoding.UTF8.GetBytes(querystring);
         }

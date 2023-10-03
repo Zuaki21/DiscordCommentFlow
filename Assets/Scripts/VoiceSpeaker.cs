@@ -28,7 +28,7 @@ namespace Zuaki
         async UniTask<AudioClip> GetChatClip(ChatElement chatElement)
         {
             AudioClip newClip = null;
-            if (Settings.Instance.useLocalVoiceVox)
+            if (SettingManager.Settings.useLocalVoiceVox)
             {
                 VoiceVoxLocalManager voiceVoxManager = new VoiceVoxLocalManager();//VoiceVoxManagerクラスを作成
                 //UnityWebRequestException: Cannot connect to destination hostを取得する
@@ -39,7 +39,7 @@ namespace Zuaki
                 catch (System.Exception e) when (e.Message == "Cannot connect to destination host")
                 {
                     Debug.LogWarning("LocalのVoiceVoxサーバーに接続できませんでした。Web版VOICEVOXを使います。");
-                    Settings.Instance.useLocalVoiceVox = false;
+                    SettingManager.Settings.useLocalVoiceVox = false;
                     SettingOperator.SetVoiceVoxType();
                     return await GetChatClip(chatElement);
                 }
@@ -79,7 +79,7 @@ namespace Zuaki
                 {
                     string newMessage = $"{ChatElementList[0].Message} {ChatElementList[1].Message}";
 
-                    var ChatElement = new ChatElement(newMessage, commenter: ChatElementList[0].Commenter);
+                    var ChatElement = new ChatElement(newMessage, commenter: ChatElementList[0].role);
                     ChatElementList.RemoveAt(0);
                     ChatElementList.RemoveAt(0);
                     ChatElementList.Insert(0, ChatElement);
@@ -93,13 +93,13 @@ namespace Zuaki
         public static void AddComment(ChatElement[] newChatElements)
         {
             // GPTのコメントを読み上げない設定の場合は読み上げない
-            if (newChatElements[0].Commenter == SpeakerRole.GPT && Settings.Instance.useVoiceVoxOnGPT == false) return;
+            if (newChatElements[0].role == SpeakerRole.GPT && SettingManager.Settings.useVoiceVoxOnGPT == false) return;
 
             foreach (ChatElement newChatElement in newChatElements)
             {
                 string message = CleanUpText(newChatElement.Message);
 
-                if (Settings.Instance.useNameOnVoice && newChatElement.Name != null && newChatElement.Commenter != SpeakerRole.GPT)
+                if (SettingManager.Settings.useNameOnVoice && newChatElement.Name != null && newChatElement.role != SpeakerRole.GPT)
                 {
                     string name = CleanUpText(newChatElement.Name);
                     message = $"{name}さん{message}";
@@ -107,11 +107,11 @@ namespace Zuaki
 
                 //コメントが空の場合は読み上げない
                 if (message == "") continue;
-                ChatElement fixedChatElement = new ChatElement(message, commenter: newChatElement.Commenter);
+                ChatElement fixedChatElement = new ChatElement(message, commenter: newChatElement.role);
 
                 //コメントの文字総数が上限を超える場合は読み上げない
                 //コメント数が多すぎる場合の対処
-                if (fixedChatElement.Message.Length + CountCommentLetters() > Settings.Instance.maxAllCommentLength)
+                if (fixedChatElement.Message.Length + CountCommentLetters() > SpeakerData.SpeakerOption.maxAllCommentLength)
                 {
                     Debug.Log($"コメント数が多すぎるため読みとばします:{fixedChatElement.Message}");
                     continue;
@@ -143,9 +143,9 @@ namespace Zuaki
             // ￥を円に変換
             fixText = Regex.Replace(fixText, @"￥(\d+)", match => match.Groups[1].Value + "円");
             // コメントの文字数が上限を超える場合は上限までに切り詰める
-            if (fixText.Length > Settings.Instance.maxCommentLength)
+            if (fixText.Length > SpeakerData.SpeakerOption.maxCommentLength)
             {
-                fixText = fixText.Substring(0, Settings.Instance.maxCommentLength - 3) + "以下略";
+                fixText = fixText.Substring(0, SpeakerData.SpeakerOption.maxCommentLength - 3) + "以下略";
             }
             return fixText;
         }

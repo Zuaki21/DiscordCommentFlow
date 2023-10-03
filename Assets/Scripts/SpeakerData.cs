@@ -15,8 +15,8 @@ namespace Zuaki
         [HideInInspector] public RoleVoice roleVoice;
 
         public static RoleVoice RoleVoice => Instance.roleVoice;
-        public DefaultSpeechOption defaultOption;
-        public static DefaultSpeechOption DefaultOption => Instance.defaultOption;
+        public SpeakerOption speakerOption;
+        public static SpeakerOption SpeakerOption => Instance.speakerOption;
         public static int GetSpeakerID(SpeakerRole commenter)
         => GetRoleSetting(commenter).speakerID;
         public static RoleSetting GetRoleSetting(SpeakerRole commenter)
@@ -65,11 +65,13 @@ namespace Zuaki
     }
 
     [System.Serializable]
-    public class DefaultSpeechOption
+    public class SpeakerOption
     {
         [Range(0.5f, 2)] public float speed = 1.0f;
         [Range(-0.1f, 0.1f)] public float pitch = 0.0f;
         [Range(0f, 2f)] public float intonationScale = 1.0f;
+        [Range(10, 100)] public int maxCommentLength = 50;
+        [Range(50, 200)] public int maxAllCommentLength = 100;
     }
     public enum SpeakerRole
     {
@@ -80,6 +82,7 @@ namespace Zuaki
         GPT = 4,
         Other = 5,
     }
+    
     [System.Serializable]
     public class RoleSetting
     {

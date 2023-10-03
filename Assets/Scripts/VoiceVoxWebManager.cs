@@ -24,7 +24,7 @@ namespace Zuaki
         => await PostVoiceVoxWebRequest(text, SpeakerData.GetSpeakerID(commenter), speechSpeed, pitch, intonationScale);
 
         public static async UniTask<AudioClip> PostVoiceVoxWebRequest(ChatElement chatElement, float? speechSpeed = null, float? pitch = null, float? intonationScale = null)
-        => await PostVoiceVoxWebRequest(chatElement.Message, chatElement.Commenter, speechSpeed, pitch, intonationScale);
+        => await PostVoiceVoxWebRequest(chatElement.Message, chatElement.role, speechSpeed, pitch, intonationScale);
 
         /// <summary>
         /// Web版VOICEVOXを使って音声を生成する
@@ -40,7 +40,7 @@ namespace Zuaki
             List<IMultipartFormSection> formData = new List<IMultipartFormSection>
             {
                 new MultipartFormDataSection("text", text),
-                new MultipartFormDataSection("key", Settings.VOICEVOX_WebAPI[APIkeyIndex])
+                new MultipartFormDataSection("key", SettingManager.VOICEVOX_WebAPI[APIkeyIndex])
             };
 
             // オプションがないならデフォルト値を使う
@@ -67,14 +67,14 @@ namespace Zuaki
                 Debug.LogWarning("WEB版VOICEVOXのAPIのポイントが足りません");
                 Debug.Log("APIキーを変更します");
                 APIkeyIndex++;
-                if (APIkeyIndex >= Settings.VOICEVOX_WebAPI.Length)
+                if (APIkeyIndex >= SettingManager.VOICEVOX_WebAPI.Length)
                 {
                     Debug.LogError("APIキーがすべて使われました");
                     Debug.LogError("WEB版VOICEVOXのAPIのポイントが足りません");
                     Debug.Log("Web版VOICEVOXを使わない設定にします");
-                    Settings.Instance.useLocalVoiceVox = true;
+                    SettingManager.Settings.useLocalVoiceVox = true;
                     SettingOperator.SetVoiceVoxType();
-                    Settings.Instance.useVoiceVox = false;
+                    SettingManager.Settings.useVoiceVox = false;
                     SettingOperator.SetUseVoiceVox();
                     APIkeyIndex = 0;
                     return null;
@@ -149,9 +149,9 @@ namespace Zuaki
         public SpeechOption(int? speakerID = null, float? speechSpeed = null, float? pitch = null, float? intonationScale = null)
         {
             this.speakerID = speakerID ?? SpeakerData.GetSpeakerID(SpeakerRole.Other);
-            this.speechSpeed = speechSpeed ?? SpeakerData.DefaultOption.speed;
-            this.pitch = pitch ?? SpeakerData.DefaultOption.pitch;
-            this.intonationScale = intonationScale ?? SpeakerData.DefaultOption.intonationScale;
+            this.speechSpeed = speechSpeed ?? SpeakerData.SpeakerOption.speed;
+            this.pitch = pitch ?? SpeakerData.SpeakerOption.pitch;
+            this.intonationScale = intonationScale ?? SpeakerData.SpeakerOption.intonationScale;
         }
     }
 }

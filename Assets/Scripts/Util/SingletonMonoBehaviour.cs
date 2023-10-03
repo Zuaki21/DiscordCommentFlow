@@ -1,8 +1,10 @@
 ﻿using UnityEngine;
 using System;
+using System.Threading;
 
 public abstract class SingletonMonoBehaviour<T> : MonoBehaviour where T : MonoBehaviour
 {
+    private static SynchronizationContext context;
     private static T instance;
     public static T Instance
     {
@@ -27,6 +29,7 @@ public abstract class SingletonMonoBehaviour<T> : MonoBehaviour where T : MonoBe
         // 他のゲームオブジェクトにアタッチされているか調べる
         // アタッチされている場合は破棄する。
         CheckInstance();
+        context = SynchronizationContext.Current;
         //継承先でAwakeを実装する場合は必ずbase.Awake()を呼ぶこと
     }
 
@@ -43,5 +46,9 @@ public abstract class SingletonMonoBehaviour<T> : MonoBehaviour where T : MonoBe
         }
         Destroy(this);
         return false;
+    }
+    protected static void RunOnMainThread(Action action)
+    {
+        context.Post(_ => action(), null);
     }
 }

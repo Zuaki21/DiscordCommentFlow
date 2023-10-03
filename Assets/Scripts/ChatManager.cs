@@ -23,8 +23,8 @@ namespace Zuaki
         [SerializeField] ChatMaterial chatMaterial;
         [SerializeField] SuperChatMaterial[] superChatMaterials;
 
-        float topLocalY = 335;
-        float rightLocalX = 650;
+        const float topLocalY = 335;
+        const float rightLocalX = 650;
 
         public static void AddChatElement(ChatElement[] chatElements)
         {
@@ -63,11 +63,12 @@ namespace Zuaki
                 }
 
                 //新しいコメントを生成
-                TextMeshProUGUI textMeshProUGUI = newFlowChatObject.GetComponent<TextMeshProUGUI>();
+                TextMeshProUGUI textMesh = newFlowChatObject.GetComponent<TextMeshProUGUI>();
                 //コメントを設定
-                textMeshProUGUI.text = newElement.Message;
+                textMesh.text = newElement.Message;
                 //Materialを設定
-                textMeshProUGUI.fontMaterial = chatMaterial.GetMaterial(newElement.role);
+                textMesh.fontMaterial = chatMaterial.GetMaterial(newElement.role);
+                textMesh.fontSize = SettingManager.Settings.fontSize;
                 //親を設定
                 newFlowChatObject.transform.SetParent(commentParent);
 
@@ -76,7 +77,7 @@ namespace Zuaki
                 FlowComment flowComment = newFlowChatObject.GetComponent<FlowComment>();
 
                 //コメントの位置が重ならないように必要に応じて変更
-                flowComment.transform.localPosition = new Vector2(rightLocalX, topLocalY);
+                flowComment.transform.localPosition = new Vector2(rightLocalX, topLocalY - SettingManager.Settings.topMargin - flowComment.commentHeight / 2);
                 SetFlowChatPosition(flowComment);
 
                 allFlowComments.Add(flowComment);

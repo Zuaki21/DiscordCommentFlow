@@ -20,7 +20,7 @@ namespace Zuaki
     {
         [SerializeField, Range(20, 100)] public int fontSize = 40;
         [SerializeField, Range(1f, 10f)] public float flowSpeed = 3.0f;
-        [SerializeField, Range(0, 100)] public float topMargin = 30;
+        [SerializeField, Range(-30, 30)] public float topMargin = 30;
         public bool useGPT = false;
         public bool useVoiceVox = false;
         public bool useVoiceVoxOnGPT = false;

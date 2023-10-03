@@ -652,7 +652,7 @@ MonoBehaviour:
   settings:
     fontSize: 40
     flowSpeed: 2
-    topMargin: 5
+    topMargin: -20
     useGPT: 0
     useVoiceVox: 0
     useVoiceVoxOnGPT: 0

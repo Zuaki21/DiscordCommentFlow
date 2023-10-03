@@ -27,7 +27,6 @@ namespace Zuaki
         }
         protected void Start()
         {
-            textMesh.fontSize = SettingManager.Settings.fontSize;
             rb.velocity = new Vector2(-commentSpeed * fixedSpeedParam, 0);
         }
         protected void Update()

@@ -90,8 +90,11 @@ namespace Zuaki
         }
         int JudgeSuperChat(string text)
         {
+            // カンマを除外
+            text = text.Replace(",", "");
+
             // 正規表現パターンを定義
-            string pattern = @"￥(\d+)";
+            string pattern = @"[￥¥](\d+)";
 
             // 正規表現で金額を抽出
             Match match = Regex.Match(text, pattern);

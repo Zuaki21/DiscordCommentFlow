@@ -77,7 +77,7 @@ namespace Zuaki
                 FlowComment flowComment = newFlowChatObject.GetComponent<FlowComment>();
 
                 //コメントの位置が重ならないように必要に応じて変更
-                flowComment.transform.localPosition = new Vector2(rightLocalX, topLocalY - SettingManager.Settings.topMargin - flowComment.commentHeight / 2);
+                flowComment.transform.localPosition = new Vector2(rightLocalX, topLocalY - SettingManager.Instance.topMargin - flowComment.commentHeight / 2);
                 SetFlowChatPosition(flowComment);
 
                 allFlowComments.Add(flowComment);

@@ -58,14 +58,14 @@
                     </ui:VisualElement>
                     <ui:Toggle label="AI(ChatGPT)でコメントを増やす" name="UseAIToggle" style="align-items: stretch; justify-content: flex-start; -unity-text-align: upper-left; flex-direction: row; background-color: rgb(148, 209, 141); margin-top: 20px; padding-right: 5px;" />
                     <ui:VisualElement name="AIGroup" style="flex-grow: 1; background-color: rgb(177, 219, 181); padding-right: 10px; padding-left: 10px;">
-                        <ui:GroupBox name="GPTAPIGroup" style="flex-direction: row;">
+                        <ui:GroupBox name="GPTAPIGroup" style="flex-direction: row; padding-left: 0; margin-right: 0; margin-left: 0;">
                             <ui:TextField picking-mode="Ignore" text="APIキー" name="ChatGPTAPIField" placeholder-text="ChatGPTのAPIキー" label="ChatGPTのAPIキー" style="flex-grow: 1; width: 1125px; -unity-text-align: middle-left;" />
                             <ui:Button text="確定" display-tooltip-when-elided="true" name="ChatGPTAPISubmit" />
                         </ui:GroupBox>
-                        <ui:Toggle label="ChatGPTのコメントを読み上げる&lt;size=15&gt;VOICEVOXの使用をONにする必要があります" name="ReadAIComments" style="height: 63px; -unity-text-align: middle-left; margin-top: 0; margin-right: 0; margin-bottom: 3px; margin-left: 0;" />
+                        <ui:Toggle label="ChatGPTのコメントを読み上げる&lt;size=15&gt;VOICEVOXの使用をONにする必要があります" name="ReadAIComments" style="height: 63px; -unity-text-align: middle-left; margin-top: 0; margin-bottom: 3px;" />
                     </ui:VisualElement>
                     <ui:VisualElement name="VisualElement" style="flex-grow: 0; flex-direction: row; margin-top: 10px;">
-                        <ui:Button text="初期設定に戻す(再起動します)" display-tooltip-when-elided="true" name="ResetButton" style="font-size: 20px; width: 400px; align-self: flex-end;" />
+                        <ui:Button text="初期設定に戻す" display-tooltip-when-elided="true" name="ResetButton" style="font-size: 20px; width: 400px; align-self: flex-end;" />
                         <ui:Button text="デバッグコンソールを開く(Ctrl+Q)" display-tooltip-when-elided="true" name="ConsoleLogButton" style="font-size: 20px; width: auto; align-self: flex-end; margin-left: auto; flex-grow: 1;" />
                     </ui:VisualElement>
                 </ui:VisualElement>

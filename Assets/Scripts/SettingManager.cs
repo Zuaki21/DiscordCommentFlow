@@ -1,17 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-using Zuaki;
-using TMPro;
-using UnityEngine.SceneManagement;
-using UnityEngine.UI;
-using System.Threading;
-
-
-#if UNITY_EDITOR
-using UnityEditor;
-#endif
 
 namespace Zuaki
 {
@@ -19,8 +6,7 @@ namespace Zuaki
     public class Settings
     {
         [SerializeField, Range(20, 100)] public int fontSize = 40;
-        [SerializeField, Range(1f, 10f)] public float flowSpeed = 3.0f;
-        [SerializeField, Range(-30, 30)] public float topMargin = 30;
+        [SerializeField, Range(1f, 10f)] public float flowSpeed = 2f;
         public bool useGPT = false;
         public bool useVoiceVox = false;
         public bool useVoiceVoxOnGPT = false;
@@ -32,6 +18,7 @@ namespace Zuaki
     {
         [SerializeField] GameObject SettingPanel;
         [SerializeField] GameObject LogPanel;
+        [SerializeField, Range(-30, 30)] public float topMargin = -10;
         public static Settings Settings => Instance.settings;
         [SerializeField] Settings settings;
         class TextObject { public string text; public TextObject(string text) { this.text = text; } }
@@ -82,8 +69,14 @@ namespace Zuaki
         protected override void Awake()
         {
             base.Awake();
+
+            // Settingsのデータを読み込む
             settings.Load("Settings");
+
+#if UNITY_EDITOR
+            // テスト用のチャットを使用する場合
             if (settings.useTestChat) url = test_url;
+#endif
         }
         protected void Update()
         {
@@ -108,6 +101,18 @@ namespace Zuaki
             // セーブ
             SpeakerData.Instance.Save("SpeakerData");
             settings.Save("Settings");
+        }
+        public static void Reset()
+        {
+            // SpeakerDataをリセット
+            SpeakerData.Instance.Reset();
+
+            // Settingsをリセット
+            Instance.settings = new Settings();
+            Settings.Save("Settings");
+            GPT_WebAPI = "";
+            URL = temporary_chat_url;
+            ScrapingSelenium.Instance.ChangeURL(URL);
         }
 
         const string test_url = "https://streamkit.discord.com/overlay/chat/966842017902657626/1154233939733520484?icon=true&online=true&logo=white&text_color=%23ffffff&text_size=14&text_outline_color=%23000000&text_outline_size=0&text_shadow_color=%23000000&text_shadow_size=0&bg_color=%231e2124&bg_opacity=0.95&bg_shadow_color=%23000000&bg_shadow_size=0&invite_code=wu8pUa3nZ7&limit_speaking=false&small_avatars=false&hide_names=false&fade_chat=0";

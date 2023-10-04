@@ -41,8 +41,17 @@ namespace Zuaki
             ChromeDriverService driverService = ChromeDriverService.CreateDefaultService();
             driverService.HideCommandPromptWindow = true;
 
-            // NOTE: 起動にはそこそこ時間がかかる
-            driver = new ChromeDriver(driverService, options);
+            try
+            {
+                // NOTE: 起動にはそこそこ時間がかかる
+                driver = new ChromeDriver(driverService, options);
+            }
+            catch (Exception e)
+            {
+                Debug.LogError("ChromeDriverの起動に失敗しました。起動にはバージョン117台のGoogleChromeが必要です。");
+                Debug.LogError($"<size=15>{e.Message}</size>");
+                return;
+            }
 
             // 起動後は好きなようにChromeを操作できる
             Debug.Log($"Discord Streamkit Overlayを開きます。\n<size=10><color=#e0ffff><u><link=\"{SettingManager.URL}\">{SettingManager.URL}</link></u></color></size>");

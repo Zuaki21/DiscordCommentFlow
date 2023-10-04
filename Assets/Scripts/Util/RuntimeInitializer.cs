@@ -9,6 +9,7 @@ public static class RuntimeInitializer
     public static void Init()
     {
         VoiceVoxWebManager.APIkeyIndex = 0;
+
         // SpeakerDataのデータを読み込む
         SpeakerData.Instance.Load("SpeakerData");
 

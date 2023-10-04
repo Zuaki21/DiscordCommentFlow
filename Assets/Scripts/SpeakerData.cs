@@ -51,6 +51,19 @@ namespace Zuaki
         }
 #endif
 
+        public void Reset()
+        {
+            roleVoice.Programmer = new RoleSetting(3);
+            roleVoice.Illustrator = new RoleSetting(2);
+            roleVoice.SoundCreator = new RoleSetting(8);
+            roleVoice.ScenarioWriter = new RoleSetting(10);
+            roleVoice.GPT = new RoleSetting(46);
+            roleVoice.Other = new RoleSetting(3);
+
+            speakerOption = new SpeakerOption();
+            Instance.Save("SpeakerData");
+        }
+
     }
 
     [System.Serializable]
@@ -67,7 +80,7 @@ namespace Zuaki
     [System.Serializable]
     public class SpeakerOption
     {
-        [Range(0.5f, 2)] public float speed = 1.0f;
+        [Range(0.5f, 2)] public float speed = 1.25f;
         [Range(-0.1f, 0.1f)] public float pitch = 0.0f;
         [Range(0f, 2f)] public float intonationScale = 1.0f;
         [Range(10, 100)] public int maxCommentLength = 50;
@@ -82,13 +95,23 @@ namespace Zuaki
         GPT = 4,
         Other = 5,
     }
-    
+
     [System.Serializable]
     public class RoleSetting
     {
         [ReadOnly] public string name;
         [Range(0, 25)] public int characterNum = 0;
         [Range(0, 5)] public int styleNum = 0;
+
+        public RoleSetting(int characterNum, int styleNum)
+        {
+            this.characterNum = characterNum;
+            this.styleNum = styleNum;
+        }
+        public RoleSetting(int speakerID = 0)
+        {
+            this.speakerID = speakerID;
+        }
         public int speakerID
         {
             get

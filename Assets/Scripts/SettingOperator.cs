@@ -275,11 +275,17 @@ namespace Zuaki
 
         public static void Reset()
         {
-            // 設定をリセット
-            SaveMethods.DeleteAll();
+            SettingManager.Reset();
+            Debug.Log("設定をリセットしました。");
+            Reload();
+        }
+
+        public static void Restart()
+        {
             // アプリを再起動する
             System.Diagnostics.Process.Start(Application.dataPath.Replace("_Data", ".exe"));
             Application.Quit();
+
         }
 
         void ChangeFooterPosition(VisualElement footer, VisualElement root, Foldout detailSettingFoldout)

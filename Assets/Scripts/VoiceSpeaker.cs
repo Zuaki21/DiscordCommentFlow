@@ -79,7 +79,7 @@ namespace Zuaki
                 {
                     string newMessage = $"{ChatElementList[0].Message} {ChatElementList[1].Message}";
 
-                    var ChatElement = new ChatElement(newMessage, commenter: ChatElementList[0].role);
+                    var ChatElement = new ChatElement(newMessage, role: ChatElementList[0].role);
                     ChatElementList.RemoveAt(0);
                     ChatElementList.RemoveAt(0);
                     ChatElementList.Insert(0, ChatElement);
@@ -107,7 +107,7 @@ namespace Zuaki
 
                 //コメントが空の場合は読み上げない
                 if (message == "") continue;
-                ChatElement fixedChatElement = new ChatElement(message, commenter: newChatElement.role);
+                ChatElement fixedChatElement = new ChatElement(message, role: newChatElement.role);
 
                 //コメントの文字総数が上限を超える場合は読み上げない
                 //コメント数が多すぎる場合の対処

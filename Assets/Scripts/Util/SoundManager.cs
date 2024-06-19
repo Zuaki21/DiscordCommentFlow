@@ -100,15 +100,15 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
         switch (type)
         {
             case VolumeType.Master:
-                AudioMixer.SetFloat("MasterVolume", ConvertVolumeToDecibel(volume));
+                AudioMixer.SetFloat("Master", ConvertVolumeToDecibel(volume));
                 SEVolume = volume;
                 break;
             case VolumeType.BGM:
-                AudioMixer.SetFloat("BGMVolume", ConvertVolumeToDecibel(volume));
+                AudioMixer.SetFloat("BGM", ConvertVolumeToDecibel(volume));
                 MasterVolume = volume;
                 break;
             case VolumeType.SE:
-                AudioMixer.SetFloat("SEVolume", ConvertVolumeToDecibel(volume));
+                AudioMixer.SetFloat("SE", ConvertVolumeToDecibel(volume));
                 BGMVolume = volume;
                 break;
         }
@@ -118,13 +118,13 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
         switch (type)
         {
             case VolumeType.BGM:
-                AudioMixer.GetFloat("BGMVolume", out float BGMVolume);
+                AudioMixer.GetFloat("BGM", out float BGMVolume);
                 return ConvertDecibelToVolume(BGMVolume);
             case VolumeType.SE:
-                AudioMixer.GetFloat("SEVolume", out float SEVolume);
+                AudioMixer.GetFloat("SE", out float SEVolume);
                 return ConvertDecibelToVolume(SEVolume);
             case VolumeType.Master:
-                AudioMixer.GetFloat("MasterVolume", out float MasterVolume);
+                AudioMixer.GetFloat("Master", out float MasterVolume);
                 return ConvertDecibelToVolume(MasterVolume);
         }
         return 0;
@@ -301,11 +301,11 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
     }
 #pragma warning restore//警告の解除
 
-    float ConvertVolumeToDecibel(float volume = 0)
+    static float ConvertVolumeToDecibel(float volume = 0)
     {
         return Mathf.Clamp(Mathf.Log10(volume) * 20, -80, 0);
     }
-    float ConvertDecibelToVolume(float decibel)
+    static float ConvertDecibelToVolume(float decibel)
     {
         return Mathf.Clamp(Mathf.Pow(10, decibel / 20), 0, 1);
     }

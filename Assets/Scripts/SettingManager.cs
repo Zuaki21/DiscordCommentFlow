@@ -13,12 +13,16 @@ namespace Zuaki
         public bool useTestChat = false;
         public bool useLocalVoiceVox = false;
         public bool useNameOnVoice = false;
+        public string fontName = "";
+        public bool useCustomColor = false;
+        public Color textColor = Color.white;
+        public Color outtlineColor = Color.black;
+
     }
     public class SettingManager : SingletonMonoBehaviour<SettingManager>
     {
         [SerializeField] GameObject SettingPanel;
         [SerializeField] GameObject LogPanel;
-        [SerializeField, Range(-30, 30)] public float topMargin = -10;
         public static Settings Settings => Instance.settings;
         [SerializeField] Settings settings;
         class TextObject { public string text; public TextObject(string text) { this.text = text; } }
@@ -72,6 +76,8 @@ namespace Zuaki
 
             // Settingsのデータを読み込む
             settings.Load("Settings");
+            if (settings.fontName == "") settings.fontName = FontData.CurrentFontName;
+            FontData.SetCurrentFont(settings.fontName);
 
 #if UNITY_EDITOR
             // テスト用のチャットを使用する場合
@@ -106,6 +112,9 @@ namespace Zuaki
         {
             // SpeakerDataをリセット
             SpeakerData.Instance.Reset();
+
+            // FontDataをリセット
+            FontData.Reset();
 
             // Settingsをリセット
             Instance.settings = new Settings();

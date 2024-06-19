@@ -39,7 +39,7 @@ Please generate the delivery comments as shown in the example according to the f
             string[] generatedComments = await GetComments(realComments);
             if (generatedComments == null) return null;
             ChatElement[] chatElementsArray = generatedComments
-            .Select(comment => new ChatElement(message: comment, commenter: SpeakerRole.GPT))
+            .Select(comment => new ChatElement(message: comment, role: SpeakerRole.GPT))
             .ToArray();
             return chatElementsArray;
         }

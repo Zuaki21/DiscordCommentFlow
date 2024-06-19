@@ -8,6 +8,9 @@ using Zuaki;
 using System.Linq;
 using Fab.UITKDropdown;
 using System.Threading;
+using DG.Tweening;
+using SFB;
+using Game.UI;
 
 namespace Zuaki
 {
@@ -18,12 +21,16 @@ namespace Zuaki
         [SerializeField] GameObject LogPanel;
         bool detailSetting = false;
         string loadingChannelText = "チャット読込中です...";
+        Scroller verticalScroller;
 
         protected void OnEnable()
         {
 
             uiDocument = GetComponent<UIDocument>();
             VisualElement root = uiDocument.rootVisualElement;
+
+            ScrollView scrollView = root.Q<ScrollView>("ScrollView");
+            verticalScroller = scrollView.verticalScroller;
 
             // URL設定
             TextField urlField = root.Q<TextField>("URLField");
@@ -116,7 +123,7 @@ namespace Zuaki
             //読み上げキャラクター設定
             foreach (SpeakerRole role in System.Enum.GetValues(typeof(SpeakerRole)))
             {
-                MakeMenu(role, root);
+                MakeRoleVoiceMenu(role, root);
             }
 
             //LoadingChannelText
@@ -142,6 +149,11 @@ namespace Zuaki
             detailSettingFoldout.value = detailSetting;
             detailSettingFoldout.RegisterCallback<ChangeEvent<bool>>((evt) =>
             {
+                if (!detailSetting && detailSettingFoldout.value)
+                {
+                    //0.1秒でverticalScroller.valueを600にする(DoTweenで)
+                    DOTween.To(() => verticalScroller.value, x => verticalScroller.value = x, 560, 0.1f);
+                }
                 detailSetting = detailSettingFoldout.value;
                 ChangeFooterPosition(footer, root, detailSettingFoldout);
             });
@@ -163,6 +175,27 @@ namespace Zuaki
             flowSpeedSlider.RegisterCallback<ChangeEvent<float>>((evt) =>
             {
                 SettingManager.Settings.flowSpeed = evt.newValue;
+            });
+
+            DropdownField fontField = root.Q<DropdownField>("FontField");
+            fontField.choices = FontData.GetFontNames();
+            fontField.value = FontData.CurrentFontName;
+            fontField.RegisterCallback<ChangeEvent<string>>((evt) =>
+            {
+                FontData.SetCurrentFont(evt.newValue);
+            });
+            Button addNewFontButton = root.Q<Button>("AddNewFontButton");
+            addNewFontButton.RegisterCallback<ClickEvent>((evt) =>
+            {
+                OpenAddFontBrowser(fontField);
+            });
+
+            SliderInt readVolumeSlider = root.Q<SliderInt>("ReadVolumeSlider");
+            readVolumeSlider.value = SpeakerData.SpeakerOption.volume;
+            readVolumeSlider.RegisterCallback<ChangeEvent<int>>((evt) =>
+            {
+                SoundManager.SetVolume((float)evt.newValue / 100, VolumeType.Master);
+                SpeakerData.SpeakerOption.volume = evt.newValue;
             });
 
             Slider readSpeedSlider = root.Q<Slider>("ReadSpeedSlider");
@@ -203,19 +236,62 @@ namespace Zuaki
             Label versionLabel = root.Q<Label>("VersionLabel");
             //製品名 Ver.バージョン
             versionLabel.text = $"{Application.productName} Ver.{Application.version}";
+
+            var colorGroup = root.Q<VisualElement>("ColorGroup");
+            var useCustomColorToggle = root.Q<Toggle>("UseCustomColorToggle");
+            useCustomColorToggle.value = SettingManager.Settings.useCustomColor;
+            colorGroup.SetEnabled(SettingManager.Settings.useCustomColor);
+            useCustomColorToggle.RegisterCallback<ChangeEvent<bool>>((evt) =>
+            {
+                SettingManager.Settings.useCustomColor = evt.newValue;
+                colorGroup.SetEnabled(evt.newValue);
+            });
+
+            var colorPopup = root.Q<ColorPopup>("color-popup");
+            var textColorField = root.Q<ColorField>("TextColorField");
+            var outlineColorField = root.Q<ColorField>("OutlineColorField");
+            textColorField.ColorPopup = colorPopup;
+            outlineColorField.ColorPopup = colorPopup;
+            textColorField.value = SettingManager.Settings.textColor;
+            outlineColorField.value = SettingManager.Settings.outtlineColor;
+            textColorField.ResetButtonPressed += () => textColorField.value = Color.white;
+            outlineColorField.ResetButtonPressed += () => outlineColorField.value = Color.black;
+            textColorField.RegisterValueChangedCallback(evt =>
+            {
+                SettingManager.Settings.textColor = evt.newValue;
+            });
+            outlineColorField.RegisterValueChangedCallback(evt =>
+            {
+                SettingManager.Settings.outtlineColor = evt.newValue;
+                FontData.SetCustomOutlineColor();
+            });
         }
 
-        void MakeMenu(SpeakerRole role, VisualElement root)
+        void MakeRoleVoiceMenu(SpeakerRole role, VisualElement root)
         {
             Dropdown dropdown = new Dropdown(root);
             DropdownMenu characterMenu = new DropdownMenu();
             Button btn = root.Q<Button>(name: role.ToString() + "Voice");
-            btn.clickable.clicked += () => dropdown.Open(characterMenu, btn.worldBound);
+            btn.clickable.clicked += () =>
+            {
+                if (verticalScroller.value > 350)
+                {
+                    //0.1秒でverticalScroller.valueを410にする(DoTweenで)
+                    DOTween.To(() => verticalScroller.value, x => verticalScroller.value = x, 350, 0.1f).OnComplete(() =>
+                    {
+                        dropdown.Open(characterMenu, btn.worldBound);
+                    });
+                }
+                else
+                {
+                    dropdown.Open(characterMenu, btn.worldBound);
+                }
 
+            };
             foreach (var characterStyle in VoiceCharacterData.AllCharacterStyles)
                 characterMenu.AppendAction(characterStyle, (DropdownMenuAction action)
                 => SetVoice(action, role, btn));
-            btn.text = role.ToString() + "\n<size=20>" + VoiceCharacterData.AllCharacterStyles[SpeakerData.GetRoleSetting(role).speakerID];
+            btn.text = role.ToString() + "\n<size=12>" + VoiceCharacterData.AllCharacterStyles[SpeakerData.GetRoleSetting(role).speakerID];
         }
 
         private void SetVoice(DropdownMenuAction action, SpeakerRole role, Button button)
@@ -224,7 +300,7 @@ namespace Zuaki
             VoiceCharacter character = VoiceCharacterData.VoiceCharacters.First(x => x.name == characterStyle[0]);
             Style style = character.styles.First(x => x.name == characterStyle[1]);
             SpeakerData.GetRoleSetting(role).speakerID = style.id;
-            button.text = role.ToString() + "\n<size=20>" + action.name;
+            button.text = role.ToString() + "\n<size=12>" + action.name;
         }
 
         // 設定画面のオブジェクトを更新する
@@ -305,6 +381,26 @@ namespace Zuaki
                 rootElement.Add(footer);
             }
 
+        }
+        public void OpenAddFontBrowser(DropdownField field)
+        {
+
+            ExtensionFilter[] extensions = new ExtensionFilter[] { new ExtensionFilter("フォントファイル", "ttf", "otf") };
+            var dirPath = Application.streamingAssetsPath + "/Fonts";
+
+            //選択画面を開いてパスを取得
+            var paths = StandaloneFileBrowser.OpenFilePanel("フォントを追加する", dirPath, extensions, true);
+            //ファイルを選択されてたら
+            if (paths.Length > 0)
+            {
+                string fontPath = paths[0];
+                FontData.AddNewFont(fontPath);
+
+                string fontName = System.IO.Path.GetFileNameWithoutExtension(fontPath);
+                field.choices = FontData.GetFontNames();
+                FontData.SetCurrentFont(fontName);
+                field.value = FontData.CurrentFontName;
+            }
         }
     }
 }

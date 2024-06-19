@@ -2,56 +2,125 @@ Toggle > VisualElement > #unity-checkmark {
     -unity-background-scale-mode: scale-to-fit;
     width: 30px;
     height: 30px;
-    margin-left: 0px;
+    margin-left: 0;
     margin-right: 10px;
 }
+
 Foldout > Toggle > VisualElement {
     flex-direction: row;
 }
-#DetailSetting > Toggle > VisualElement,
-#ReadGroup > Toggle > VisualElement,
-#AIGroup > Toggle > VisualElement{
+
+#DetailSetting > Toggle > VisualElement {
     flex-direction: row-reverse;
 }
+
+#ReadGroup > Toggle > VisualElement {
+    flex-direction: row-reverse;
+}
+
+#AIGroup > Toggle > VisualElement {
+    flex-direction: row-reverse;
+}
+#UseCustomColorToggle > VisualElement {
+    flex-direction: row-reverse;
+}
+
 TextField > VisualElement {
     margin-left: auto;
     flex-grow: 0;
     width: 100px;
     flex-direction: row-reverse;
 }
-#unity-radio-button-group__container{
+
+#unity-radio-button-group__container {
     flex-frow: 1;
     margin-left: auto;
     flex-direction: row;
 }
-#VoiceVoxTypeGroup > VisualElement{
+
+#VoiceVoxTypeGroup > VisualElement {
     justify-content: space-between;
     align-self: center;
 }
+
 #ReadCharacterGroup > GroupBox > Button {
     width: 15%;
 }
-#ReadCharacterGroup, #EssentialSettingGroup, #HowToGroup, #ReadSettingGroup, #ReadGroup, #AIGroup, #DetailSettingFoldout{
+
+#ReadCharacterGroup {
     border-radius: 20px;
 }
-Button, #unity-text-input, RadioButton{
+
+#EssentialSettingGroup {
+    border-radius: 20px;
+}
+
+#HowToGroup {
+    border-radius: 20px;
+}
+
+#ReadSettingGroup {
+    border-radius: 20px;
+}
+
+#ReadGroup {
+    border-radius: 20px;
+}
+
+#AIGroup {
+    border-radius: 20px;
+}
+
+#DetailSettingFoldout {
+    border-radius: 20px;
+}
+
+#FontField > VisualElement {
+    border-radius: 20px;
+}
+
+Button {
     border-radius: 10px;
 }
-Foldout > #unity-content{
+
+#unity-text-input {
+    border-radius: 10px;
+}
+
+RadioButton {
+    border-radius: 10px;
+}
+
+Foldout > #unity-content {
     margin-left: 10px;
     margin-right: 10px;
 }
-#unity-text-field{
+
+#unity-text-field {
     margin-left: 20px;
     width: 80px;
     height: 40px;
     align-self: center;
 }
 
-Slider > VisualElement > #unity-text-field > #unity-text-input > TextElement,
-SliderInt > VisualElement > #unity-text-field > #unity-text-input > TextElement{
+Slider > VisualElement > #unity-text-field > #unity-text-input > TextElement {
     -unity-text-align: middle-center;
 }
-Slider > Label, SliderInt > Label{
+
+SliderInt > VisualElement > #unity-text-field > #unity-text-input > TextElement {
+    -unity-text-align: middle-center;
+}
+
+Slider > Label {
     width: 25%;
+}
+
+SliderInt > Label {
+    width: 25%;
+}
+
+.unity-popup-field {
+}
+
+.unity-base-popup-field {
 }

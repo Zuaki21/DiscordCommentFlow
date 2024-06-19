@@ -5,16 +5,19 @@ using Zuaki;
 using TMPro;
 using UnityEngine.EventSystems;
 using DG.Tweening;
+using NUnit.Framework.Internal;
+using Cysharp.Threading.Tasks;
 
 namespace Zuaki
 {
     public class FlowComment : MonoBehaviour, IDragHandler, IPointerEnterHandler, IPointerDownHandler, IPointerUpHandler, IPointerExitHandler
     {
         Rigidbody2D rb;
-        TextMeshProUGUI textMesh;
+        TextMeshProUGUI textMeshPro;
         float leftLocalX = -650;
-        public float commentLength => textMesh.preferredWidth + 5;  //widthの値//textMesh.text.Length * textMesh.fontSize;
-        public float commentHeight => textMesh.preferredHeight * 0.7f; //heightの値は少し小さくする
+        public float commentLength => textMeshPro.preferredWidth + 5;
+        public float commentUpperHeights => textMeshPro.bounds.extents.y + textMeshPro.bounds.center.y;
+        public float commentLowerHeights => textMeshPro.bounds.extents.y - textMeshPro.bounds.center.y;
         public float commentSpeed => SettingManager.Settings.flowSpeed * (commentLength + 1300) / 1300;
         public float fixedSpeedParam = 1;
         public bool isPointEnter = false;
@@ -22,7 +25,9 @@ namespace Zuaki
         Tween tween;
         protected void Awake()
         {
-            textMesh = GetComponent<TextMeshProUGUI>();
+            textMeshPro = GetComponent<TextMeshProUGUI>();
+            textMeshPro.fontSize = SettingManager.Settings.fontSize;
+            textMeshPro.font = FontData.CurrentFontAsset;
             rb = GetComponent<Rigidbody2D>();
         }
         protected void Start()

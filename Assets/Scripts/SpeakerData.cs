@@ -80,6 +80,7 @@ namespace Zuaki
     [System.Serializable]
     public class SpeakerOption
     {
+        [Range(0, 100)] public int volume = 50;
         [Range(0.5f, 2)] public float speed = 1.25f;
         [Range(-0.1f, 0.1f)] public float pitch = 0.0f;
         [Range(0f, 2f)] public float intonationScale = 1.0f;

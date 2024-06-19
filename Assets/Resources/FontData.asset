@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4da38a3d6a834be4d840faf1f78cbe67, type: 3}
+  m_Name: FontData
+  m_EditorClassIdentifier: 
+  defaultFontAsset: {fileID: 11400000, guid: a4fd650fff100354ab68e699d451f87b, type: 2}
+  currentFontAsset: {fileID: 0}
+  fontPaths:
+  - C:/Users/Zuaki/Unity/Projects/Commenity/Assets/StreamingAssets/Fonts\LINE Seed
+    JP.ttf
+  - C:/Users/Zuaki/Unity/Projects/Commenity/Assets/StreamingAssets/Fonts\Mplus1-Bold.ttf
+  - C:/Users/Zuaki/Unity/Projects/Commenity/Assets/StreamingAssets/Fonts\PixelMplus10.ttf
+  - "C:/Users/Zuaki/Unity/Projects/Commenity/Assets/StreamingAssets/Fonts\\\u30C7\u30E9\u30B4\u30B7\u30C3\u30AF.ttf"
+  - "C:/Users/Zuaki/Unity/Projects/Commenity/Assets/StreamingAssets/Fonts\\\u30C9\u30C3\u30C8\u30B4\u30B7\u30C3\u30AF16.ttf"
+  - "C:/Users/Zuaki/Unity/Projects/Commenity/Assets/StreamingAssets/Fonts\\\u30DE\u30AD\u30CA\u30B94Square.otf"
+  - "C:/Users/Zuaki/Unity/Projects/Commenity/Assets/StreamingAssets/Fonts\\\u5EFB\u60F3\u4F53\u30CD\u30AF\u30B9\u30C8UP
+    B.ttf"
+  - "C:/Users/Zuaki/Unity/Projects/Commenity/Assets/StreamingAssets/Fonts\\\u6E90\u30CE\u660E\u671D.otf"
+  - "C:/Users/Zuaki/Unity/Projects/Commenity/Assets/StreamingAssets/Fonts\\\u6E90\u754C\u660E\u671D.ttf"
+  customFontColor: {r: 0, g: 0, b: 0, a: 0}
+  customFontMaterial: {fileID: 2100000, guid: 41193a3c6816ee64e9ada287e6698c5d, type: 2}
+  roleMaterial:
+    Programmer: {fileID: 2100000, guid: 1a4c90eb530880d4d9aeaa744c2ac07c, type: 2}
+    Illustrator: {fileID: 2100000, guid: fe7758c187f05564d83a0a1bc2d2cc50, type: 2}
+    SoundCreator: {fileID: 2100000, guid: 0dcc1bbcdaed84e409c68d62e72721b9, type: 2}
+    ScenarioWriter: {fileID: 2100000, guid: a8a186613c83e314d97a9c6505e74734, type: 2}
+    GPT: {fileID: 2100000, guid: 66003178ced563c4d9d50d0df6d28089, type: 2}
+    Other: {fileID: 2100000, guid: 76c9d235817b6324280071b5620c3055, type: 2}

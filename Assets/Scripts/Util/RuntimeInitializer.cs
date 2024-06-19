@@ -1,12 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Zuaki;
 
 public static class RuntimeInitializer
 {
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
-    public static void Init()
+    public static async void Init()
     {
         VoiceVoxWebManager.APIkeyIndex = 0;
 
@@ -16,6 +17,12 @@ public static class RuntimeInitializer
         // シーン遷移時に破棄されないオブジェクトを生成する
         CreateDontDestroyObject<SoundManager>();
         CreateDontDestroyObject<VoiceSpeaker>();
+
+        // 1フレーム待機
+        await UniTask.Yield();
+
+        // 音量を設定
+        SoundManager.SetVolume((float)SpeakerData.SpeakerOption.volume / 100, VolumeType.Master);
     }
 
     /// <summary>

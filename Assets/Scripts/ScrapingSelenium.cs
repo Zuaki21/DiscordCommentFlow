@@ -67,9 +67,11 @@ namespace Zuaki
                 AddTestChat();
             }
         }
-        void AddTestChat()
+        public void AddTestChat()
         {
-            AddChatElements(new ChatElement[] { new ChatElement("これはテストコメントです") });
+            //役職はランダム
+            SpeakerRole role = (SpeakerRole)UnityEngine.Random.Range(0, Enum.GetNames(typeof(SpeakerRole)).Length);
+            AddChatElements(new ChatElement[] { new ChatElement("これはテストコメントです", role: role) });
         }
 
         public void ChangeURL(string newUrl)
@@ -208,7 +210,7 @@ namespace Zuaki
                 // 重複していなかったらchatElementsに追加
                 chatElementHistory.Add(chatElement);
                 // chatElementsの数が20を超えたら古いものから削除
-                if (chatElementHistory.Count > 20)
+                if (chatElementHistory.Count > 50)
                 {
                     chatElementHistory.RemoveAt(0);
                 }
@@ -236,12 +238,12 @@ namespace Zuaki
         public string Time { get; private set; } = null;
         public SpeakerRole role = SpeakerRole.Other;
         public int SpeakerID => SpeakerData.GetSpeakerID(role);
-        public ChatElement(string message = null, string name = null, string time = null, SpeakerRole commenter = SpeakerRole.Other)
+        public ChatElement(string message = null, string name = null, string time = null, SpeakerRole role = SpeakerRole.Other)
         {
             this.Message = message;
             this.Name = name;
             this.Time = time;
-            this.role = commenter;
+            this.role = role;
         }
         public static SpeakerRole GetRole(string style)
         {

@@ -1,35 +1,44 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
     <Style src="project://database/Assets/UI/SettingUI.uss?fileID=7433441132597879392&amp;guid=7b48e39b20dc93f4280f898eb14520b7&amp;type=3#SettingUI" />
     <Style src="project://database/Assets/UI/DropdownStyle.uss?fileID=7433441132597879392&amp;guid=043b98f963909834584a108e753a39cd&amp;type=3#DropdownStyle" />
-    <ui:VisualElement style="flex-grow: 1; background-color: rgb(233, 233, 233); font-size: 20px; -unity-font-definition: url(&apos;project://database/Assets/Fonts/FontAsset/LINESeedJP_A_TTF_Rg%20SDF.asset?fileID=11400000&amp;guid=f1a3130a04ebb2e46bcdad94c8d0e303&amp;type=2#LINESeedJP_A_TTF_Rg SDF&apos;);">
+    <ui:VisualElement style="flex-grow: 1; background-color: rgb(233, 233, 233); font-size: 17px; -unity-font-definition: url(&apos;project://database/Assets/Fonts/FontAsset/LINE%20Seed%20JP%20SDF.asset?fileID=11400000&amp;guid=f1a3130a04ebb2e46bcdad94c8d0e303&amp;type=2#LINE Seed JP SDF&apos;);">
         <ui:GroupBox name="GroupBox" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; flex-direction: row; background-color: rgb(255, 255, 255);">
-            <ui:Label text="【設定ウィンドウ】(Escキーで表示/非表示を切り替えられます)" display-tooltip-when-elided="true" name="SettingText" style="font-size: 30px; -unity-font-style: bold; -unity-text-align: middle-left; color: rgb(0, 0, 0); flex-grow: 1;" />
+            <ui:Label text="【設定ウィンドウ】(Escキーで表示/非表示を切り替えられます)" display-tooltip-when-elided="true" name="SettingText" style="font-size: 25px; -unity-font-style: bold; -unity-text-align: middle-left; color: rgb(0, 0, 0); flex-grow: 1;" />
             <ui:Button text="コメントビューへ" parse-escape-sequences="true" display-tooltip-when-elided="true" name="CloseButton" style="width: auto; height: 50px; align-self: center;" />
         </ui:GroupBox>
-        <ui:ScrollView name="ScrollView" mouse-wheel-scroll-size="1000" style="flex-grow: 1;">
-            <ui:GroupBox name="HowToGroup" style="background-color: rgb(246, 250, 190); padding-right: 10px; padding-left: 10px; padding-bottom: 0; padding-top: 0;">
-                <ui:Label tabindex="-1" text="&lt;b&gt;操作説明&lt;/b&gt;&#10;１ 必須項目の設定を確認してから右上の「コメントビューへ」を押すとコメントが流れる画面が見れます。&#10;２ Ctrl+Spaceキーを押してテストコメントを流し、雰囲気を感じます。コメントは掴んで移動させられます。&#10;３ Escキーを押すとこの画面に戻ってこれます。&#10;４ 初期設定では「#一時ボイス用チャット」が開かれます。変更したい場合は必須項目内のURLを変更して「確定」を押してください。&#10;５ なぜか正常に動作しない時はCtrl+Qでデバッグコンソールを開いて確認してください。分からなかったらずあきにDMしてください。&#10;☆ 詳細設定ではVOICEVOXに読み上げさせたり、AIによってコメントをかさましする機能があります。お好みでどうぞ！" parse-escape-sequences="true" display-tooltip-when-elided="true" />
-            </ui:GroupBox>
-            <ui:GroupBox name="EssentialSettingGroup" style="background-color: rgb(238, 181, 181); flex-grow: 1; flex-shrink: 1; margin-top: 10px; padding-right: 10px; padding-left: 10px;">
+        <ui:ScrollView name="ScrollView" mouse-wheel-scroll-size="1000" style="flex-grow: 1; font-size: 16px;">
+            <ui:GroupBox name="EssentialSettingGroup" style="background-color: rgb(238, 181, 181); flex-grow: 1; flex-shrink: 1; margin-top: 6px; padding-right: 10px; padding-left: 10px;">
                 <ui:Label text="必須項目" display-tooltip-when-elided="true" name="EssentialSettingText" style="-unity-font-style: bold; color: rgb(255, 0, 0); -unity-text-outline-width: 0; -unity-text-outline-color: rgba(0, 0, 0, 0); margin-top: 0; margin-bottom: 0; padding-top: 0; padding-bottom: 0; margin-left: 10px;" />
                 <ui:GroupBox name="URLGroup" style="background-color: rgba(255, 0, 10, 0); flex-direction: row; padding-top: 0; padding-bottom: 0; margin-top: 5px; margin-bottom: 0;">
                     <ui:TextField picking-mode="Ignore" label="Discord Streamkit OverlayのURL" text="URL" name="URLField" placeholder-text="URLを入力してね" style="flex-grow: 1; width: 1145px;" />
                     <ui:Button text="確定" display-tooltip-when-elided="true" name="URLSubmit" />
                 </ui:GroupBox>
-                <ui:GroupBox style="flex-direction: row; margin-top: 0; padding-top: 0;">
-                    <ui:Label tabindex="-1" text="URL設定後、「チャット読込中です...」から変わらないなら再起動してみてください→" parse-escape-sequences="true" display-tooltip-when-elided="true" style="align-self: center; color: rgba(27, 27, 27, 0.64); font-size: 18px;" />
+                <ui:GroupBox style="flex-direction: row; margin-top: 0; padding-top: 0; margin-bottom: 0;">
+                    <ui:Label tabindex="-1" text="URL設定後、「チャット読込中です...」から変わらないなら再起動してみてください→" parse-escape-sequences="true" display-tooltip-when-elided="true" style="align-self: center; color: rgba(27, 27, 27, 0.64); font-size: 15px;" />
                     <ui:Label tabindex="-1" text="状態：チャット読込中です..." parse-escape-sequences="true" display-tooltip-when-elided="true" name="LoadingChannelText" style="-unity-text-align: upper-right; margin-left: auto; margin-right: 10px;" />
                 </ui:GroupBox>
-                <ui:GroupBox focusable="false">
+                <ui:GroupBox focusable="false" style="padding-top: 0; margin-top: 0;">
+                    <ui:VisualElement style="flex-grow: 1; flex-direction: row;">
+                        <ui:DropdownField label="コメントのフォント" index="-1" choices="System.Collections.Generic.List`1[System.String]" name="FontField" style="flex-grow: 1; margin-top: 0;" />
+                        <ui:Button text="フォントを新規追加する" parse-escape-sequences="true" display-tooltip-when-elided="true" name="AddNewFontButton" style="width: 250px; align-items: auto; justify-content: flex-start; align-self: flex-end;" />
+                    </ui:VisualElement>
                     <ui:SliderInt picking-mode="Ignore" label="コメントの大きさ" value="40" high-value="100" focusable="true" show-input-field="true" low-value="20" name="FontSizeSlider" />
                     <ui:Slider picking-mode="Ignore" label="流れる速度" value="3" high-value="10" name="FlowSpeedSlider" show-input-field="true" low-value="0.5" />
+                    <ui:Toggle label="コメントを指定の色に統一する" name="UseCustomColorToggle" style="background-color: rgb(236, 148, 148); padding-right: 10px; padding-left: 10px; margin-bottom: 0; margin-right: 0; margin-left: 0;" />
+                    <ui:VisualElement name="ColorGroup" style="flex-grow: 1; background-color: rgb(236, 148, 148); flex-direction: row;">
+                        <Game.UI.ColorField name="TextColorField" label="コメントの色→" reset-label="\U0000f0e2" value="#FFFFFFFF" style="padding-right: 5%; padding-left: 5%; flex-grow: 1; margin-top: 0;" />
+                        <Game.UI.ColorField name="OutlineColorField" label="縁取りの色→" reset-label="\U0000f0e2" style="padding-right: 5%; padding-left: 5%; flex-grow: 1; margin-top: 0;" />
+                    </ui:VisualElement>
                 </ui:GroupBox>
             </ui:GroupBox>
-            <ui:Foldout text="詳細設定" value="true" name="DetailSettingFoldout" style="background-color: rgba(0, 0, 0, 0.08); margin-top: 10px; margin-right: 4px; margin-left: 4px; padding-bottom: 10px; padding-top: 10px;">
+            <ui:GroupBox name="HowToGroup" style="background-color: rgb(246, 250, 190); padding-right: 10px; padding-left: 10px; padding-bottom: 0; padding-top: 0;">
+                <ui:Label tabindex="-1" text="&lt;b&gt;操作説明&lt;/b&gt;&#10;１ 必須項目の設定を確認してから右上の「コメントビューへ」を押すとコメントが流れる画面が見れます。&#10;２ Ctrl+Spaceキーを押してテストコメントを流せます。また、コメントは掴んで移動させられます。Escキーを押すとこの画面に戻ってこれます。&#10;３ 初期設定では「#一時ボイス用チャット」が開かれます。変更したい場合は必須項目内のURLを変更して「確定」を押してください。&#10;４ なぜか正常に動作しない時はCtrl+Qでデバッグコンソールを開いて確認してください。分からなかったらずあきにDMしてください。&#10;☆ 詳細設定ではVOICEVOXに読み上げさせたり、AIによってコメントをかさましする機能があります。お好みでどうぞ！" parse-escape-sequences="true" display-tooltip-when-elided="true" />
+            </ui:GroupBox>
+            <ui:Foldout text="詳細設定" value="true" name="DetailSettingFoldout" style="background-color: rgba(0, 0, 0, 0.08); margin-top: 6px; margin-right: 4px; margin-left: 4px; padding-bottom: 10px; padding-top: 10px;">
                 <ui:VisualElement name="DetailSetting" style="flex-grow: 1;">
-                    <ui:Toggle label="VOICEVOXでコメントを読み上げる" name="UseVoiceVoxToggle" style="background-color: rgb(150, 154, 255); padding-right: 5px; padding-left: 5px;" />
+                    <ui:Toggle label="VOICEVOXでコメントを読み上げる(オススメ)" name="UseVoiceVoxToggle" style="background-color: rgb(150, 154, 255); padding-right: 10px; padding-left: 10px;" />
                     <ui:VisualElement name="ReadGroup" style="flex-grow: 1; background-color: rgb(203, 205, 255); padding-right: 10px; padding-left: 10px;">
-                        <ui:RadioButtonGroup label="VOICEVOXの種類&#10;&lt;size=15&gt;ローカルは反応速度が速いですが、手元PCでのVOICEVOXアプリ起動が必要です&#10;Webは特に設定は要りませんが、約3500コメント/日の上限が存在します" value="-1" name="VoiceVoxTypeGroup" style="flex-grow: 0; flex-wrap: nowrap;">
+                        <ui:RadioButtonGroup label="VOICEVOXの種類&#10;&lt;size=15&gt;ローカルは反応速度が速いですが、手元PCでのVOICEVOXアプリ起動が必要です&#10;Webは特に設定は必要ないですが、約3500コメント/日の上限が存在します" value="-1" name="VoiceVoxTypeGroup" style="flex-grow: 0; flex-wrap: nowrap;">
                             <ui:RadioButton label="ローカル" name="LocalVoiceVox" style="background-color: rgba(0, 0, 0, 0.12); right: 30px; padding-right: 10px; padding-left: 10px;" />
                             <ui:RadioButton label="Web版" name="WebVoiceVox" style="background-color: rgba(0, 0, 0, 0.12); padding-right: 10px; padding-left: 10px;" />
                         </ui:RadioButtonGroup>
@@ -49,6 +58,7 @@
                         </ui:VisualElement>
                         <ui:VisualElement name="ReadSettingGroup" style="flex-grow: 1; margin-right: 10px; margin-left: 10px; margin-bottom: 10px; background-color: rgb(230, 231, 255); padding-right: 30px; padding-left: 30px;">
                             <ui:Label tabindex="-1" text="読み上げ全体の設定" parse-escape-sequences="true" display-tooltip-when-elided="true" style="-unity-text-align: upper-center; margin-bottom: 0; padding-bottom: 0;" />
+                            <ui:SliderInt picking-mode="Ignore" label="音量" value="50" high-value="100" low-value="0" show-input-field="true" name="ReadVolumeSlider" />
                             <ui:Slider picking-mode="Ignore" label="読み上げ速度" value="1.25" high-value="2" low-value="0.5" show-input-field="true" name="ReadSpeedSlider" />
                             <ui:Slider picking-mode="Ignore" label="ピッチ" value="0" high-value="0.1" low-value="-0.1" show-input-field="true" name="ReadPitchSlider" />
                             <ui:Slider picking-mode="Ignore" label="イントネーション幅" value="1" high-value="2" low-value="0" show-input-field="true" name="ReadIntonationScaleSlider" />
@@ -56,17 +66,17 @@
                             <ui:SliderInt picking-mode="Ignore" label="読み上げ待ちの最大文字量&#10;&lt;size=15&gt;超えた際に新たなコメントを無視します" value="100" high-value="200" low-value="20" show-input-field="true" name="ReadMaxAllLengthSlider" />
                         </ui:VisualElement>
                     </ui:VisualElement>
-                    <ui:Toggle label="AI(ChatGPT)でコメントを増やす" name="UseAIToggle" style="align-items: stretch; justify-content: flex-start; -unity-text-align: upper-left; flex-direction: row; background-color: rgb(148, 209, 141); margin-top: 20px; padding-right: 5px;" />
+                    <ui:Toggle label="AI(ChatGPT)でコメントを増やす(上級者向け)" name="UseAIToggle" style="align-items: stretch; justify-content: flex-start; -unity-text-align: upper-left; flex-direction: row; background-color: rgb(148, 209, 141); margin-top: 20px; padding-right: 10px; padding-left: 10px;" />
                     <ui:VisualElement name="AIGroup" style="flex-grow: 1; background-color: rgb(177, 219, 181); padding-right: 10px; padding-left: 10px;">
                         <ui:GroupBox name="GPTAPIGroup" style="flex-direction: row; padding-left: 0; margin-right: 0; margin-left: 0;">
-                            <ui:TextField picking-mode="Ignore" text="APIキー" name="ChatGPTAPIField" placeholder-text="ChatGPTのAPIキー" label="ChatGPTのAPIキー" style="flex-grow: 1; width: 1125px; -unity-text-align: middle-left;" />
+                            <ui:TextField picking-mode="Ignore" text="APIキー" name="ChatGPTAPIField" placeholder-text="ChatGPTのAPIキー" label="ChatGPTのAPIキー&lt;size=15&gt;(公式サイトから鍵を入手してください)" style="flex-grow: 1; width: 1125px; -unity-text-align: middle-left;" />
                             <ui:Button text="確定" display-tooltip-when-elided="true" name="ChatGPTAPISubmit" />
                         </ui:GroupBox>
                         <ui:Toggle label="ChatGPTのコメントを読み上げる&lt;size=15&gt;VOICEVOXの使用をONにする必要があります" name="ReadAIComments" style="height: 63px; -unity-text-align: middle-left; margin-top: 0; margin-bottom: 3px;" />
                     </ui:VisualElement>
                     <ui:VisualElement name="VisualElement" style="flex-grow: 0; flex-direction: row; margin-top: 10px;">
-                        <ui:Button text="初期設定に戻す" display-tooltip-when-elided="true" name="ResetButton" style="font-size: 20px; width: 400px; align-self: flex-end;" />
-                        <ui:Button text="デバッグコンソールを開く(Ctrl+Q)" display-tooltip-when-elided="true" name="ConsoleLogButton" style="font-size: 20px; width: auto; align-self: flex-end; margin-left: auto; flex-grow: 1;" />
+                        <ui:Button text="初期設定に戻す(追加したフォントは残ります)" display-tooltip-when-elided="true" name="ResetButton" style="font-size: 20px; width: 50%; align-self: flex-end; flex-grow: 1;" />
+                        <ui:Button text="デバッグコンソールを開く(Ctrl+Q)" display-tooltip-when-elided="true" name="ConsoleLogButton" style="font-size: 20px; width: 50%; align-self: flex-end; flex-grow: 1;" />
                     </ui:VisualElement>
                 </ui:VisualElement>
             </ui:Foldout>
@@ -76,4 +86,5 @@
             </ui:VisualElement>
         </ui:ScrollView>
     </ui:VisualElement>
+    <Game.UI.ColorPopup name="color-popup" start-visible="false" style="background-color: rgb(255, 255, 255); align-self: center; width: 600px; height: 600px; justify-content: space-around; align-items: center; -unity-font-definition: url(&apos;project://database/Assets/Fonts/FontAsset/LINE%20Seed%20JP%20SDF.asset?fileID=11400000&amp;guid=f1a3130a04ebb2e46bcdad94c8d0e303&amp;type=2#LINE Seed JP SDF&apos;); color: rgb(0, 0, 0); -unity-font-style: bold; top: 67px;" />
 </ui:UXML>

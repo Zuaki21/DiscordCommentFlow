@@ -18,9 +18,10 @@ namespace Zuaki
     public class ChatManager : SingletonMonoBehaviour<ChatManager>
     {
         List<FlowComment> allFlowComments = new List<FlowComment>();
+        [SerializeField, Range(-30, 30)] public float topMargin = -10;
+        [SerializeField, Range(0f, 10)] public float margin = 1;
         [SerializeField] Transform commentParent;
         [SerializeField] GameObject flowCommentPrefab;
-        [SerializeField] ChatMaterial chatMaterial;
         [SerializeField] SuperChatMaterial[] superChatMaterials;
 
         const float topLocalY = 335;
@@ -66,9 +67,14 @@ namespace Zuaki
                 TextMeshProUGUI textMesh = newFlowChatObject.GetComponent<TextMeshProUGUI>();
                 //コメントを設定
                 textMesh.text = newElement.Message;
+
+                //色を設定
+                if (SettingManager.Settings.useCustomColor)
+                    textMesh.color = SettingManager.Settings.textColor;
+
                 //Materialを設定
-                textMesh.fontMaterial = chatMaterial.GetMaterial(newElement.role);
-                textMesh.fontSize = SettingManager.Settings.fontSize;
+                textMesh.fontMaterial = FontData.GetRoleMaterial(textMesh.fontMaterial, newElement.role);
+
                 //親を設定
                 newFlowChatObject.transform.SetParent(commentParent);
 
@@ -76,20 +82,26 @@ namespace Zuaki
                 newFlowChatObject.transform.localScale = Vector3.one;
                 FlowComment flowComment = newFlowChatObject.GetComponent<FlowComment>();
 
-                //コメントの位置が重ならないように必要に応じて変更
-                flowComment.transform.localPosition = new Vector2(rightLocalX, topLocalY - SettingManager.Instance.topMargin - flowComment.commentHeight / 2);
-                SetFlowChatPosition(flowComment);
-
-                allFlowComments.Add(flowComment);
-
                 //コメントの速度を設定
                 if (chatMoney > 0) flowComment.fixedSpeedParam = 0.8f;
 
+                ////////////////////////////////////////////////////////////
+                //コメントの初期位置を設定
+                await UniTask.Yield();//textMeshPro.boundsの取得に1フレーム必要
+                flowComment.transform.localPosition = new Vector2(rightLocalX, topLocalY - topMargin - flowComment.commentUpperHeights);
+                //コメントの位置が重ならないように必要に応じて変更
+                SetFlowChatPosition(flowComment);
+                ////////////////////////////////////////////////////////////
+
+                allFlowComments.Add(flowComment);
                 await UniTask.Delay(millisecondsDelay: Random.Range(0, 2000));
             }
         }
         int JudgeSuperChat(string text)
         {
+            //全角の数字を半角に変換
+            text = Regex.Replace(text, @"[０-９]", p => ((char)(p.Value[0] - '０' + '0')).ToString());
+
             // カンマを除外
             text = text.Replace(",", "");
 
@@ -105,7 +117,9 @@ namespace Zuaki
 
             if (match.Success)
             {
-                amount = int.Parse(match.Groups[1].Value);
+                //金額を取得(Int.Parseできるように8文字以内にする)
+                string money = match.Groups[1].Value.Substring(0, Mathf.Min(8, match.Groups[1].Value.Length));
+                amount = int.Parse(money);
             }
 
             //100円以下はスーパーチャットとして認めない
@@ -140,11 +154,13 @@ namespace Zuaki
                 bool isOverlap = false;
                 foreach (FlowComment flowComment in allFlowComments)
                 {
+                    //1フレーム待つ
+
                     //ローカル座標に変換
                     if (IsOverlappingHeights(flowComment, newflowComment) && IsPredictConflicts(flowComment, newflowComment) == true)
                     {
-                        float yInterval = (flowComment.commentHeight + newflowComment.commentHeight) / 2 + 1;
-                        newflowComment.transform.localPosition = new Vector2(newflowComment.transform.localPosition.x, newflowComment.transform.localPosition.y - yInterval);
+                        float yInterval = flowComment.commentLowerHeights + newflowComment.commentUpperHeights + margin + 0.01f;
+                        newflowComment.transform.localPosition = new Vector2(newflowComment.transform.localPosition.x, flowComment.transform.localPosition.y - yInterval);
                         isOverlap = true;
                         break;
                     }
@@ -164,12 +180,12 @@ namespace Zuaki
         //y座標と高さ幅heighから重なるかどうかを予測する
         bool IsOverlappingHeights(FlowComment earlyComment, FlowComment lateComment)
         {
-            float earlyTop = earlyComment.transform.localPosition.y + earlyComment.commentHeight / 2;
-            float earlyBottom = earlyComment.transform.localPosition.y - earlyComment.commentHeight / 2;
-            float lateTop = lateComment.transform.localPosition.y + lateComment.commentHeight / 2;
-            float lateBottom = lateComment.transform.localPosition.y - lateComment.commentHeight / 2;
+            float earlyTop = earlyComment.transform.localPosition.y + earlyComment.commentUpperHeights;
+            float earlyBottom = earlyComment.transform.localPosition.y - earlyComment.commentLowerHeights;
+            float lateTop = lateComment.transform.localPosition.y + lateComment.commentUpperHeights;
+            float lateBottom = lateComment.transform.localPosition.y - lateComment.commentLowerHeights;
 
-            if (earlyTop < lateBottom || lateTop < earlyBottom) return false;
+            if (earlyTop + margin < lateBottom || lateTop + margin < earlyBottom) return false;
             else return true;
         }
 
@@ -192,29 +208,6 @@ namespace Zuaki
             //  コメントが消える前に衝突するならtrueを返す
             if (earlyEndTime <= relativeConflictTime) return true;
             else return false;
-        }
-    }
-    [System.Serializable]
-    public class ChatMaterial
-    {
-        public Material Programmer;
-        public Material Illustrator;
-        public Material SoundCreator;
-        public Material ScenarioWriter;
-        public Material GPT;
-        public Material Other;
-
-        public Material GetMaterial(SpeakerRole commenter)
-        {
-            return commenter switch
-            {
-                SpeakerRole.Programmer => Programmer,
-                SpeakerRole.Illustrator => Illustrator,
-                SpeakerRole.SoundCreator => SoundCreator,
-                SpeakerRole.ScenarioWriter => ScenarioWriter,
-                SpeakerRole.GPT => GPT,
-                _ => Other,
-            };
         }
     }
 

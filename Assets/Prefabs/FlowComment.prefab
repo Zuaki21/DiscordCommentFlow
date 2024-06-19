@@ -54,8 +54,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fixedSpeedParam: 1
-  startPos: {x: 0, y: 0}
-  mouseStartPos: {x: 0, y: 0}
+  isPointEnter: 0
 --- !u!222 &7350981750920773033
 CanvasRenderer:
   m_ObjectHideFlags: 0

@@ -14,30 +14,31 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   roleVoice:
     Programmer:
-      name: "\u305A\u3093\u3060\u3082\u3093(\u30CE\u30FC\u30DE\u30EB)"
+      name: 
       characterNum: 1
       styleNum: 0
     Illustrator:
-      name: "\u96E8\u6674\u306F\u3046(\u30CE\u30FC\u30DE\u30EB)"
-      characterNum: 3
+      name: 
+      characterNum: 0
       styleNum: 0
     SoundCreator:
-      name: "\u6625\u65E5\u90E8\u3064\u3080\u304E(\u30CE\u30FC\u30DE\u30EB)"
+      name: 
       characterNum: 2
       styleNum: 0
     ScenarioWriter:
-      name: "\u96E8\u6674\u306F\u3046(\u30CE\u30FC\u30DE\u30EB)"
+      name: 
       characterNum: 3
       styleNum: 0
     GPT:
-      name: "\u5C0F\u591C\u30FBSAYO(\u30CE\u30FC\u30DE\u30EB)"
+      name: 
       characterNum: 17
       styleNum: 0
     Other:
-      name: "\u305A\u3093\u3060\u3082\u3093(\u30CE\u30FC\u30DE\u30EB)"
+      name: 
       characterNum: 1
       styleNum: 0
   speakerOption:
+    volume: 50
     speed: 1.25
     pitch: 0
     intonationScale: 1

@@ -1,23 +1,36 @@
-# Unityプロジェクト用テンプレート
-
-私がゲーム制作にサッと取り掛かるためのテンプレートプロジェクトです。
-
-このリポジトリを複製してからゲーム制作することをお勧めします。
+# DiscordCommentFlow
+Discordのコメントをニコニコ動画みたいに配信画面上に流すためのツールです
 
 ## 機能
+- コメントを取得して流す
+- 広島大学ゲーム制作同好会内のロール毎にボイスを変更できる
+  - ロールごとの色が反映される
+- 外部からフォントファイルを追加できる
+- VOICEVOXによる読み上げ
+- ChatGPTによる自演コメント生成
 
-- 自動ビルド機能
-- 自動デプロイ機能 ([公開先](https://github.com/Zuaki21/develop))
+## 使い方
+1. OBSStudioを起動
+1. DiscordCommentFlowを起動
+1. 「コメントビューへ」を押す
+![TocommenView](image.png)
+1. OBSStudioでソースの追加>ゲームキャプチャと選択し、対象ウィンドウにDiscordCommentFlowを選び、透過を許可にチェック
+![Alt text](image-3.png)
+1. お好みに合わせて詳細設定一覧をいじる
+![Alt text](image-1.png)
 
-## 新しくプロジェクトとして始める手順
+## 仕組み
+- UIはUI Toolkitにて作成
+- [Discord Streamkit Overlay](https://streamkit.discord.com/overlay)をSeleniumでスクレイピングして取得
+    - [Discord Streamkit Overlay](https://streamkit.discord.com/overlay)はローカルで動いているDiscordから情報を受け取り、ブラウザ画面にコメントを表示する公式サービス
+- コメントの大きさや配置、スピードを計算してお互いに重ならないように位置を調整
+- 動的にFontAssetファイルとFontマテリアルを生成して適用
+- VOICEVOX API(公式)または[WEB版VOICEVOX API（高速）](https://voicevox.su-shiki.com/su-shikiapis/)(有志)を用いて読み上げ音声生成、ダウンロードして流す
+- ChatGPT APIを用いて取得コメントに類似した自演コメントを自動生成して流す
 
-1. "Use This template" → "Create a new repository" と選択
-1. リポジトリ名はプロジェクト名として好きに決める
-1. Github Actionsの"Acquire activation file"ワークフローを実行し、alfを取得([参考](https://zenn.dev/nikaera/articles/unity-gameci-github-actions))
-1. [ここ](https://license.unity3d.com/)でUnity License のアクティベーションを行いulfファイルをダウンロードする(PersonalEdition想定でワークフロー書いてるので、PersonalEditionを選ぶ)
-1. リポジトリ内のSettingへ移動、シークレットキーとして"UNITY_LICENSE"にulfファイルの中身をペーストする
-1. [ここ](https://github.com/settings/tokens)でトークンを生成(Select scopesの"workflow","write:packages"にチェックを入れる)してGithubActionsのシークレットキーに設定する
-1. リポジトリ内のSettingへ移動、シークレットキーとして"PERSONAL_ACCESS_TOKEN"にトークンをペーストする
-1. ローカルにcloneしてUnityHubから選択して開く
-1. UnityEditorのPlayerSettingsでProductNameを入力する(公開ページでの表示名になります)
-1. あとはMainにPushしたら自動ビルドされます！素敵なゲー制ライフを！
+## 不具合など
+Q. 起動時にChromeDriverのエラーが出る
+
+A. ChromeDriverがChromeとバージョンが違う可能性があります [Chrome for Testingサイト](https://googlechromelabs.github.io/chrome-for-testing/)から自身のChromeと同じバージョンのものを導入してください
+![ChromeSetting](images/image.png)
+![DownloadSite](images/image-1.png)

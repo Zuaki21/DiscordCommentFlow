@@ -36,3 +36,14 @@ Q. 起動時にChromeDriverのエラーが出る
 A. ChromeDriverがChromeとバージョンが違う可能性があります [Chrome for Testingサイト](https://googlechromelabs.github.io/chrome-for-testing/)から自身のChromeと同じバージョンのものを導入してください
 ![ChromeSetting](images/image.png)
 ![DownloadSite](images/image-1.png)
+
+## ライセンス
+- Selenium
+  - [公式ページ](https://www.nuget.org/packages/Selenium.WebDriver/)
+  - [リポジトリ](https://github.com/SeleniumHQ/selenium)
+  - [Apache License 2.0](https://licenses.nuget.org/Apache-2.0)
+- ChromeDriver
+  - [公式ページ](https://googlechromelabs.github.io/chrome-for-testing/)
+  - [リポジトリ](https://github.com/geonetwork/chromedriver)
+  - [条文](/Assets/StreamingAssets/LICENSE.chromedriver)
+  - [BSD 3-Clause License](https://opensource.org/licenses/BSD-3-Clause)

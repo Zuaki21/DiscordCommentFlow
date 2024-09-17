@@ -29,6 +29,8 @@ Discordのコメントをニコニコ動画みたいに配信画面上に流す�
 - ChatGPT APIを用いて取得コメントに類似した自演コメントを自動生成して流す
 
 ## 不具合など
+**(追記)v5.0のアプデにより、ChromeDriverの自動更新機能を追加しました。**
+
 Q. 起動時にChromeDriverのエラーが出る
 
 A. ChromeDriverがChromeとバージョンが違う可能性があります [Chrome for Testingサイト](https://googlechromelabs.github.io/chrome-for-testing/)から自身のChromeと同じバージョンのものを導入してください

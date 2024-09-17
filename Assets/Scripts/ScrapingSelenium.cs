@@ -5,9 +5,6 @@ using OpenQA.Selenium.Chrome;
 using Cysharp.Threading.Tasks;
 using OpenQA.Selenium;
 using System.Collections.ObjectModel;
-using System.Threading;
-using System.Text.RegularExpressions;
-
 
 namespace Zuaki
 {
@@ -16,48 +13,62 @@ namespace Zuaki
     private ChromeDriver driver;
     public bool isHeadless = true;
     [SerializeField] GameObject LoadingCommentObj;
-    void Start()
+
+    async void Start()
     {
+      // 非同期でChromeDriverの更新を行う
+      await UpdateAndLaunchDriverAsync();
+    }
+
+    async UniTask UpdateAndLaunchDriverAsync()
+    {
+      Debug.Log("バージョンを合わせるためにドライバーを更新します...");
+
+      // 非同期処理のためスレッドプールでドライバー更新を実行
+      await UniTask.SwitchToThreadPool();
+      await UpdateChromeDriver.updateDriver();
+      await UniTask.SwitchToMainThread(); // メインスレッドに戻る
+
+      Debug.Log("ドライバーの更新が完了しました。ChromeDriverを起動します...");
+
       LoadingCommentObj.SetActive(true);
 
+      // ChromeDriverのパスを指定
       var driverPath = Application.streamingAssetsPath;
-      // 現在のプロセスの環境変数を取得
-      string currentPath = Environment.GetEnvironmentVariable("PATH", EnvironmentVariableTarget.Process);
 
-      // 新しいディレクトリを追加
+      // ChromeDriverのパスを環境変数に追加
+      string currentPath = Environment.GetEnvironmentVariable("PATH", EnvironmentVariableTarget.Process);
       string updatedPath = currentPath + ";" + driverPath;
-      // 更新した環境変数をプロセスに適用
       Environment.SetEnvironmentVariable("PATH", updatedPath, EnvironmentVariableTarget.Process);
 
-      // ChromeOptionsを設定してヘッドレスモードを有効にする
+      // Chromeのオプションを設定してヘッドレスモードを有効にする
       ChromeOptions options = new ChromeOptions();
-
       if (isHeadless)
       {
-        // ヘッドレスモードを有効にする
         options.AddArgument("--headless");
       }
 
-      ChromeDriverService driverService = ChromeDriverService.CreateDefaultService();
+      // ChromeDriverのパスを指定
+      ChromeDriverService driverService = ChromeDriverService.CreateDefaultService(driverPath);
       driverService.HideCommandPromptWindow = true;
 
       try
       {
-        // NOTE: 起動にはそこそこ時間がかかる
+        // ChromeDriverを起動
         driver = new ChromeDriver(driverService, options);
+        Debug.Log("ChromeDriverの起動に成功しました。");
       }
       catch (Exception e)
       {
-        Debug.LogError("ChromeDriverの起動に失敗しました。起動にはバージョン117台のGoogleChromeが必要です。");
+        Debug.LogError("ChromeDriverの起動に失敗しました。バージョン117または互換性のあるバージョンのGoogle Chromeが必要です。");
         Debug.LogError($"<size=15>{e.Message}</size>");
         return;
       }
 
-      // 起動後は好きなようにChromeを操作できる
       Debug.Log($"Discord Streamkit Overlayを開きます。\n<size=10><color=#e0ffff><u><link=\"{SettingManager.URL}\">{SettingManager.URL}</link></u></color></size>");
       driver.Navigate().GoToUrl(SettingManager.URL);
-      // 画面キャプチャを撮る(あえて非同期で実行している)
-      _ = CheckNewComment();
+
+      _ = CheckNewComment(); // 非同期で新しいコメントをチェック
     }
 
     void Update()

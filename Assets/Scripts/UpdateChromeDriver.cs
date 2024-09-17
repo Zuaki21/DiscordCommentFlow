@@ -5,6 +5,8 @@ using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using Cysharp.Threading.Tasks;
+using System.Threading.Tasks;
 
 public class UpdateChromeDriver
 {
@@ -38,26 +40,36 @@ public class UpdateChromeDriver
   {
     try
     {
-      // コマンドプロンプトからChromeのバージョンを取得するコマンドを実行
-      Process process = new Process();
-      process.StartInfo.FileName = "cmd.exe";
-      process.StartInfo.Arguments = "/C \"wmic datafile where name='C:\\\\Program Files\\\\Google\\\\Chrome\\\\Application\\\\chrome.exe' get Version /value\"";
-      process.StartInfo.RedirectStandardOutput = true;
-      process.StartInfo.UseShellExecute = false;
-      process.StartInfo.CreateNoWindow = true;
-      process.Start();
-
-      // コマンドの出力を読み取る
-      string output = process.StandardOutput.ReadToEnd();
-      process.WaitForExit();
-
-      // 出力からバージョン情報を抽出
-      string[] lines = output.Split('\n');
-      foreach (var line in lines)
+      // Chromeのパスリストを定義
+      string[] possiblePaths = new string[]
       {
-        if (line.StartsWith("Version="))
+            "C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe",
+            "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
+      };
+
+      foreach (var chromePath in possiblePaths)
+      {
+        string command = $"/C \"wmic datafile where name='{chromePath.Replace("\\", "\\\\")}' get Version /value\"";
+        Process process = new Process();
+        process.StartInfo.FileName = "cmd.exe";
+        process.StartInfo.Arguments = command;
+        process.StartInfo.RedirectStandardOutput = true;
+        process.StartInfo.UseShellExecute = false;
+        process.StartInfo.CreateNoWindow = true;
+        process.Start();
+
+        // コマンドの出力を読み取る
+        string output = process.StandardOutput.ReadToEnd();
+        process.WaitForExit();
+
+        // 出力からバージョン情報を抽出
+        string[] lines = output.Split('\n');
+        foreach (var line in lines)
         {
-          return line.Split('=')[1].Trim();
+          if (line.StartsWith("Version="))
+          {
+            return line.Split('=')[1].Trim();
+          }
         }
       }
 
@@ -88,8 +100,7 @@ public class UpdateChromeDriver
     }
   }
 
-
-  public static void updateDriver()
+  public static async UniTask updateDriver()
   {
     // 既存の ChromeDriver プロセスを終了
     KillExistingChromeDriverProcesses();
@@ -120,32 +131,67 @@ public class UpdateChromeDriver
       }
     }
 
+    await UniTask.SwitchToMainThread(); // メインスレッドに戻る
+    UnityEngine.Debug.LogError("ChromeDriverのバージョンが異なるため、新しいバージョンをダウンロードします。");
+    await UniTask.SwitchToThreadPool();
+
     var client = new WebClient();
-    string driverInfoJson = client.DownloadString(DRIVER_INFO_URL);
-    string driverUrl = getDriverUrl(driverInfoJson, chromeVersion);
+    var tcs = new TaskCompletionSource<bool>(); // タスクの完了を待つためのオブジェクト
+    int lastLoggedProgress = 0;  // 最後にログを出した進捗
 
-    if (driverUrl == null)
+    client.DownloadProgressChanged += async (sender, e) =>
     {
-      UnityEngine.Debug.LogError("適切なバージョンのChromeDriverが見つかりませんでした。");
-      return;
-    }
+      await UniTask.SwitchToMainThread();
+      if (e.ProgressPercentage >= lastLoggedProgress) // 10%刻みでログを表示
+      {
+        lastLoggedProgress = lastLoggedProgress + 10;
+        UnityEngine.Debug.Log($"ダウンロード中: {e.ProgressPercentage}% 完了");
+      }
+      await UniTask.SwitchToThreadPool();
+    };
 
-    client.DownloadFile(driverUrl, DRIVER_ZIP);
-
-    ZipArchive archive = ZipFile.OpenRead(DRIVER_ZIP);
-    var exeList = archive.Entries.Where(i => i.FullName.EndsWith("chromedriver.exe"));
-
-    if (exeList.Count() != 1)
+    client.DownloadFileCompleted += (sender, e) =>
     {
-      UnityEngine.Debug.LogError("ChromeDriverの解凍中に問題が発生しました。");
-      return;
-    }
+      if (e.Error != null)
+      {
+        UnityEngine.Debug.LogError("ChromeDriverのダウンロード中にエラーが発生しました: " + e.Error.Message);
+        tcs.SetResult(false);
+        return;
+      }
 
-    exeList.First().ExtractToFile(driverExecutablePath, true);
+      UnityEngine.Debug.Log("ダウンロードが完了しました。ファイルを解凍しています...");
 
-    UnityEngine.Debug.Log("ChromeDriverを更新しました。");
+      try
+      {
+        using (ZipArchive archive = ZipFile.OpenRead(DRIVER_ZIP))
+        {
+          var exeList = archive.Entries.Where(i => i.FullName.EndsWith("chromedriver.exe"));
+
+          if (exeList.Count() != 1)
+          {
+            UnityEngine.Debug.LogError("ChromeDriverの解凍中に問題が発生しました。");
+            tcs.SetResult(false);
+            return;
+          }
+
+          exeList.First().ExtractToFile(driverExecutablePath, true);
+          UnityEngine.Debug.Log("ChromeDriverを更新しました。");
+          tcs.SetResult(true);
+        }
+      }
+      catch (Exception ex)
+      {
+        UnityEngine.Debug.LogError("ChromeDriverの解凍中にエラーが発生しました: " + ex.Message);
+        tcs.SetResult(false);
+      }
+    };
+
+    UnityEngine.Debug.Log("ChromeDriverをダウンロードしています...");
+    client.DownloadFileAsync(new Uri(getDriverUrl(client.DownloadString(DRIVER_INFO_URL), chromeVersion)), DRIVER_ZIP);
+
+    // ダウンロードが完了するまで待機
+    await tcs.Task;
   }
-
 
   private static string GetExistingDriverVersion(string driverPath)
   {
